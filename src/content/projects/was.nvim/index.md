@@ -6,6 +6,7 @@ demoURL: "https://github.com/bxrne/was.nvim"
 repoURL: "https://github.com/bxrne/was.nvim"
 ---
 
+> Neovim plugin to solve "What was I doing here" when moving between dirs
 
 I have been using [Neovim](https://neovim.io/) alone for maybe 2 years, have used a few starter configs and learned some Lua.
 I don't use a terminal multiplexer, my terminal ([Ghostty](https://ghostty.org/)) is fast enough with the tabs feature that I can get by without it.
@@ -32,7 +33,6 @@ Its small, all in Lua and is painfully simple.
 
 - Neovim >= 0.8.0
 - [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
-- [rcarriga/nvim-notify](https://github.com/rcarriga/nvim-notify) 
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
@@ -40,7 +40,6 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 {
   "bxrne/was.nvim",
   dependencies = {
-	"rcarriga/nvim-notify", -- for notifications
     "nvim-lua/plenary.nvim", -- for path handling
   },
   config = true, -- calls require('was').setup()
@@ -50,10 +49,9 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 ```lua
-use {
+yuse {
   "bxrne/was.nvim",
   requires = {
-    "rcarriga/nvim-notify", -- for notifications
     "nvim-lua/plenary.nvim", -- for path handling
   },
   config = function()
