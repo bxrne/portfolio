@@ -2,8 +2,8 @@
 title: "was.nvim"
 description: "Neovim plugin to solve 'What was I doing here' when moving between dirs"
 date: "Jan 15 2025"
-demoURL: "https://pkg.go.dev/github.com/Darragh-Grealish/clouseau"
-repoURL: "https://github.com/Darragh-Grealish/clouseau"
+demoURL: "https://github.com/bxrne/was.nvim"
+repoURL: "https://github.com/bxrne/was.nvim"
 ---
 
 

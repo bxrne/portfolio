@@ -1,8 +1,8 @@
 ---
 title: "Clouseau"
 description: "Inspector Clouseau Document Search Engine on Project Gutenberg directory"
-date: "Dec 20 2024"
-demoURL: "https://pkg.go.dev/github.com/Darragh-Grealish/clouseau"
+date: "Oct 22 2024"
+demoURL: "https://github.com/Darragh-Grealish/clouseau"
 repoURL: "https://github.com/Darragh-Grealish/clouseau"
 ---
 
