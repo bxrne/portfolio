@@ -8,21 +8,13 @@ repoURL: "https://github.com/bxrne/was.nvim"
 
 > Neovim plugin to solve "What was I doing here" when moving between dirs
 
-I have been using [Neovim](https://neovim.io/) alone for maybe 2 years, have used a few starter configs and learned some Lua.
-I don't use a terminal multiplexer, my terminal ([Ghostty](https://ghostty.org/)) is fast enough with the tabs feature that I can get by without it.
-For editor based tabs I actually use splits and buffers with some keymaps and its been working well for me.
+It's for someone who doesn't need a terminal multiplexer like [tmux](https://github.com/tmux/tmux/wiki) or [zellij](https://zellij.dev) but hops in and out of folders with multiple neovim instances and need to place a mental checkpoint in what they were doing or thinking.
 
-Anyway the issue I had was with multiple sessions I couldn't remember what I was doing in a particular directory.
-I use [ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon) which is really nice for small project / key files navigation and it is directory persistent. 
-So taking the directory persistence idea I made a plugin that stores your intention in a directory and you can recall it later.
-Usage: `:Was Implementing user authentication system` and then `:Was` to recall it.
-Neovim plugin to solve "What was I doing here" when moving between dirs
-
-Its small, all in Lua and is painfully simple.
+<img height="250" src="/was.nvim-screenshot.png" alt="Screenshot of was.nvim">
 
 ## Features
 
-- Store intentions per workspace (Git root or current directory)
+- Store intentions per workspace (cwd)
 - Persistent storage between Neovim sessions
 - Minimal and fast
 - Written in pure Lua
@@ -55,6 +47,48 @@ use {
     "nvim-lua/plenary.nvim", -- for path handling
   },
   config = function()
+    require('was').setup()
+  end,
+}
+```
+
+## Configuration
+
+In your Lazy or Packer configuration, you can pass an optional `opts` table to `require('was').setup()`:
+```lua
+{
+  -- "bxrne/was.nvim",
+  -- dependencies = {
+  --   "nvim-lua/plenary.nvim", -- for path handling
+  -- },
+  -- config = true, -- calls require('was').setup()
+  opts = { -- optional config
+    defer_time = 3000, -- default time for window to live for (ms)
+  },
+}
+```
+
+## Usage
+
+Store your current intention:
+```vim
+:Was Implementing user authentication system
+```
+
+View your last stored intention:
+```vim
+:Was
+```
+
+The plugin automatically detects your workspace based on cwd.
+
+Intentions are stored persistently in `~/.local/share/nvim/was/intentions.json`.
+
+## Testing
+
+```bash
+nvim --headless -c "PlenaryBustedDirectory tests/ { minimal_init = './tests/minimal_init.lua' }"
+```  config = function()
     require('was').setup()
   end,
 }
