@@ -82,32 +82,6 @@ View your last stored intention:
 :Was
 ```
 
-The plugin automatically detects your workspace based on cwd.
-
-Intentions are stored persistently in `~/.local/share/nvim/was/intentions.json`.
-
-## Testing
-
-```bash
-nvim --headless -c "PlenaryBustedDirectory tests/ { minimal_init = './tests/minimal_init.lua' }"
-```  config = function()
-    require('was').setup()
-  end,
-}
-```
-
-## Usage
-
-Store your current intention:
-```vim
-:Was Implementing user authentication system
-```
-
-View your last stored intention:
-```vim
-:Was
-```
-
 The plugin automatically detects your workspace based on:
 1. Git root directory (if in a Git repository)
 2. Current working directory (if not in a Git repository)
