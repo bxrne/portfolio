@@ -40,6 +40,10 @@ export const SOCIALS: Socials = [
     HREF: "https://github.com/bxrne",
   },
   {
+    NAME: "notion",
+    HREF: "https://notion.so/@bxrne",
+  },
+  {
     NAME: "linkedin",
     HREF: "https://www.linkedin.com/in/bxrne",
   },
