@@ -6,6 +6,8 @@ demoURL: "https://pkg.go.dev/github.com/bxrne/logmgr"
 repoURL: "https://github.com/bxrne/logmgr"
 ---
 
+![example output](https://github.com/bxrne/logmgr/raw/main/example.png)
+
 I got sick of creating a `internal/logger/logger.go` file in every project, so I made a library that takes the configuration away and goes via convention.
 It needed to be fast and structured (so Grafana, ELK and Loki will work straight away) and the only thing i *need* to configure is the log level. Time is just set to be RFC3339Nano, which is fine. Rather than initialising loggers i wanted to use a log manager (shift the init overhead to the library) - if I have to create a handler/client around a library implementation, something ain't right. Written in Go v1.24.
 
