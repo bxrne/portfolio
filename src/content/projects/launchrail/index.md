@@ -1,7 +1,7 @@
 ---
 title: "Launchrail"
 description: "High powered rocketry simulator for competition launches"
-date: "May 14 2024"
+date: "May 14 2025"
 demoURL: "https://pkg.go.dev/github.com/bxrne/launchrail"
 repoURL: "https://github.com/bxrne/launchrail"
 ---

@@ -2,6 +2,8 @@
   "name": "portfolio",
   "type": "module",
   "version": "1.0.0",
+  "license": "MIT",
+  "description": "My personal portfolio built with Astro",
   "scripts": {
     "dev": "astro dev",
     "dev:network": "astro dev --host",
