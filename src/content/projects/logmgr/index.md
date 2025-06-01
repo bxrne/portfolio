@@ -210,7 +210,8 @@ BenchmarkConcurrentLogging-16            8073288               126.8 ns/op      
 - Run CodeQL (actions, go) via Github Advanced Security
 - Run Github Copilot Pull Request Review
 - SonarQube Cloud
-- Dependabot 
+- Dependabot
+- rebase and merge btw
 
 ### Deployment
 - Build application
