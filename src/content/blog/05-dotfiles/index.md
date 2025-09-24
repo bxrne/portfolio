@@ -2,9 +2,11 @@
 title: "dev setup"
 description: "My collective configuration for dev on a Mac"
 date: "Aug 3 2025"
-demoURL:  "https://github.com/bxrne/dotfiles"
-repoURL: "https://github.com/bxrne/dotfiles"
+demoURL:  "https://github.com/bxrne/dotfiles/tree/main"
+repoURL: "https://github.com/bxrne/dotfiles/tree/main"
 ---
+
+> This has been overhauled on master (no MacOS)
 
 I had been using these tools for a while, but recently consolidated them into a single `dotfiles` repo. This lets me clone it onto a new machine and be ready in a minute or two (plugin install wait). My course has 5 residencies/internships and among other placements I have had, I have had many coldstarts so this setup is well tested.
 
