@@ -79,6 +79,8 @@ The mechanism used the PEAP method, you had to pass a hardcoded unassigned anony
 - Alacritty - terminal emulator
 - Mako - notifications
 
+> GNU stow is invaluable here, you can `ln -S` all you want but when you have many directories its easier to use stow to manage all your linking.
+
 # But that app doesn't work on Arch! 
 
 Unlikely there is not a package for it but if so you can just run the web version!
