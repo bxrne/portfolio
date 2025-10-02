@@ -1,6 +1,7 @@
 {
   "name": "portfolio",
   "type": "module",
+  "packageManager": "pnpm@10.18.0",
   "version": "1.0.0",
   "license": "MIT",
   "description": "My personal portfolio built with Astro",
