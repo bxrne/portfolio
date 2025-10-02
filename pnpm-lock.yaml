@@ -26,6 +26,9 @@ importers:
       '@fontsource/inter':
         specifier: ^5.0.17
         version: 5.2.8
+      '@fontsource/jetbrains-mono':
+        specifier: 4.5.10
+        version: 4.5.10
       '@fontsource/lora':
         specifier: ^5.0.16
         version: 5.2.8
@@ -410,6 +413,9 @@ packages:
 
   '@fontsource/inter@5.2.8':
     resolution: {integrity: sha512-P6r5WnJoKiNVV+zvW2xM13gNdFhAEpQ9dQJHt3naLvfg+LkF2ldgSLiF4T41lf1SQCM9QmkqPTn4TH568IRagg==}
+
+  '@fontsource/jetbrains-mono@4.5.10':
+    resolution: {integrity: sha512-dylbkBmAWL0fkjDpDoDbQCwTQ/W3DzLtVXmwGyAyttfKliPGSP2WpAmmMFYp9NpqFMF7CLprFyzppe8u39Orkw==}
 
   '@fontsource/lora@5.2.8':
     resolution: {integrity: sha512-AQlfsHw4TP1x/eb2IZ6VjQ70ctKa39m9JN9A4zlvDOeKYLrCs+GaYIEQ86Y6YfSPGHn01bErXkRcyktOW0LOPQ==}
@@ -3658,6 +3664,8 @@ snapshots:
   '@eslint/js@8.57.1': {}
 
   '@fontsource/inter@5.2.8': {}
+
+  '@fontsource/jetbrains-mono@4.5.10': {}
 
   '@fontsource/lora@5.2.8': {}
 
