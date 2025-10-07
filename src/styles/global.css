@@ -24,15 +24,15 @@ body {
   @apply font-sans antialiased;
   @apply flex flex-col;
   /* Gruvbox light: bg0 (cream), dark: bg0_h (dark brown) */
-  @apply bg-[#fbf1c7] dark:bg-[#1d2021];
+  @apply bg-gruvbox-bg0-light dark:bg-gruvbox-bg0-dark;
   /* Gruvbox light: fg0 with opacity, dark: fg0 with opacity */
-  @apply text-[#3c3836]/60 dark:text-[#ebdbb2]/80;
+  @apply text-gruvbox-fg1-light/60 dark:text-gruvbox-fg1-dark/80;
 }
 
 header {
   @apply fixed top-0 left-0 right-0 z-50 py-5;
   /* Gruvbox backgrounds with transparency */
-  @apply bg-[#fbf1c7]/75 dark:bg-[#1d2021]/90;
+  @apply bg-gruvbox-bg0-light/75 dark:bg-gruvbox-bg0-dark/90;
   @apply backdrop-blur-sm ;
 }
 
@@ -48,22 +48,22 @@ article {
   @apply max-w-full prose dark:prose-invert prose-img:mx-auto prose-img:my-auto;
   @apply prose-headings:font-semibold prose-p:font-serif;
   /* Gruvbox headings: fg0 (dark foreground) in light, fg0 (light foreground) in dark */
-  @apply prose-headings:text-[#282828] prose-headings:dark:text-[#ebdbb2];
+  @apply prose-headings:text-gruvbox-fg0-light prose-headings:dark:text-gruvbox-fg0-dark;
 }
 
 @layer utilities {
   article a {
     @apply font-sans text-current underline underline-offset-2;
     /* Gruvbox accent: blue (light mode darker, dark mode brighter) */
-    @apply decoration-[#076678]/40 dark:decoration-[#83a598]/50;
+    @apply decoration-gruvbox-blue-light/40 dark:decoration-gruvbox-blue-dark/50;
     @apply transition-colors duration-300 ease-in-out;
   }
-  
+
   article a:hover {
     /* Gruvbox hover: darker fg in light, brighter fg in dark */
-    @apply text-[#282828] dark:text-[#fbf1c7];
+    @apply text-gruvbox-fg0-light dark:text-gruvbox-fg0-dark;
     /* Stronger accent on hover */
-    @apply decoration-[#076678]/70 dark:decoration-[#83a598]/80;
+    @apply decoration-gruvbox-blue-light/70 dark:decoration-gruvbox-blue-dark/80;
   }
 }
 
