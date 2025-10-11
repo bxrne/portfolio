@@ -1,5 +1,5 @@
 ---
-company: "Johnson & Johnson"
+company: "Residency 3: Johnson & Johnson"
 role: "Software Engineering Intern"
 dateStart: "06/24/2024"
 dateEnd: "08/28/2024"

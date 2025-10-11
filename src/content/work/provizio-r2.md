@@ -1,5 +1,5 @@
 ---
-company: "Provizio"
+company: "Residency 2: Provizio"
 role: "AI/ML Intern"
 dateStart: "09/04/2023"
 dateEnd: "12/21/2023"

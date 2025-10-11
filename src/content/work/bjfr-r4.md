@@ -1,5 +1,5 @@
 ---
-company: "BJF Research"
+company: "Residency 4: BJF Research"
 role: "Software Engineer"
 dateStart: "01/20/2025"
 dateEnd: "05/09/2025"

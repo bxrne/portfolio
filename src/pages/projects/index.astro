@@ -15,11 +15,11 @@ const projects = (await getCollection("projects"))
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
   <Container>
     <div class="space-y-10">
-      <div class="animate font-semibold text-black dark:text-white">
+      <div class="animate font-semibold text-black">
         Projects
       </div>
       <p class="animate">
-        A collection of my projects, more on my <Link href={"https://github.com/bxrne"} external>github</Link>.
+      {PROJECTS.DESCRIPTION} 
       </p>
 
         <ul class="animate flex flex-col gap-4">

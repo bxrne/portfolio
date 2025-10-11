@@ -6,15 +6,33 @@ type Props = {
 const { href } = Astro.props;
 ---
  
-<a href={href} class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap rounded border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+<a href={href} class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap border-2 border-black text-black hover:bg-black/5 hover:text-black">
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24"
     class="absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-current">
-    <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out" />
-    <polyline points="12 5 5 12 12 19" class="translate-x-1 group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
+    <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
+    <polyline points="12 5 5 12 12 19" class="translate-x-1 group-hover:translate-x-0" />
   </svg>
   <div class="text-sm">
     <slot/>
   </div>
 </a>
+
+<style>
+  a {
+    position: relative;
+  }
+  a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(251, 241, 199);
+    transform: translate(2px, 2px);
+    z-index: -1;
+  }
+</style>
+

@@ -11,10 +11,6 @@ html {
   color-scheme: light;
 }
 
-html.dark {
-  color-scheme: dark;
-}
-
 html,
 body {
   @apply size-full;
@@ -23,17 +19,17 @@ body {
 body {
   @apply font-sans antialiased;
   @apply flex flex-col;
-  /* Gruvbox light: bg0 (cream), dark: bg0_h (dark brown) */
-  @apply bg-gruvbox-bg0-light dark:bg-gruvbox-bg0-dark;
-  /* Gruvbox light: fg0 with opacity, dark: fg0 with opacity */
-  @apply text-gruvbox-fg1-light/60 dark:text-gruvbox-fg1-dark/80;
+  /* Gruvbox light: bg0 (cream) */
+  @apply bg-gruvbox-bg0-light;
+  /* Gruvbox light: fg0 with opacity */
+  @apply text-gruvbox-fg1-light/60;
 }
 
 header {
   @apply fixed top-0 left-0 right-0 z-50 py-5;
-  /* Gruvbox backgrounds with transparency */
-  @apply bg-gruvbox-bg0-light/75 dark:bg-gruvbox-bg0-dark/90;
-  @apply backdrop-blur-sm ;
+  /* Gruvbox backgrounds solid */
+  @apply bg-gruvbox-bg0-light;
+  @apply border-b-4 border-black;
 }
 
 main {
@@ -45,41 +41,31 @@ footer {
 }
 
 article {
-  @apply max-w-full prose dark:prose-invert prose-img:mx-auto prose-img:my-auto;
-  @apply prose-headings:font-semibold prose-p:font-serif;
-  /* Gruvbox headings: fg0 (dark foreground) in light, fg0 (light foreground) in dark */
-  @apply prose-headings:text-gruvbox-fg0-light prose-headings:dark:text-gruvbox-fg0-dark;
+  @apply max-w-full prose prose-img:mx-auto prose-img:my-auto;
+  @apply prose-headings:font-semibold prose-headings:text-2xl prose-p:font-serif;
+  /* Headings: black */
+  @apply prose-headings:text-black;
 }
 
 @layer utilities {
   article a {
-    @apply font-sans text-current underline underline-offset-2;
-    /* Gruvbox accent: blue (light mode darker, dark mode brighter) */
-    @apply decoration-gruvbox-blue-light/40 dark:decoration-gruvbox-blue-dark/50;
-    @apply transition-colors duration-300 ease-in-out;
+    @apply font-sans underline underline-offset-2;
+    /* Black underline and text */
+    @apply decoration-black text-black;
   }
 
   article a:hover {
-    /* Gruvbox hover: darker fg in light, brighter fg in dark */
-    @apply text-gruvbox-fg0-light dark:text-gruvbox-fg0-dark;
-    /* Stronger accent on hover */
-    @apply decoration-gruvbox-blue-light/70 dark:decoration-gruvbox-blue-dark/80;
+    /* Keep hover for emphasis */
+    @apply decoration-black text-black;
   }
 }
 
-.animate {
-  @apply opacity-0 translate-y-3;
-  @apply transition-all duration-700 ease-out;
-}
 
-.animate.show {
-  @apply opacity-100 translate-y-0;
-}
 
 html #back-to-top {
-  @apply opacity-0 pointer-events-none;
+  @apply pointer-events-none;
 }
 
 html.scrolled #back-to-top {
-  @apply opacity-100 pointer-events-auto;
+  @apply pointer-events-auto;
 }

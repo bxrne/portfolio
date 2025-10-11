@@ -1,5 +1,5 @@
 ---
-company: "Analog Devices"
+company: "Residency 1: Analog Devices"
 role: "Engineering Intern"
 dateStart: "06/24/2023"
 dateEnd: "08/28/2023"

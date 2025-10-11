@@ -11,23 +11,23 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: "home",
   DESCRIPTION:
-    "I'm Adam Byrne, studying BSc+MSc ISE. I've worked in MedTech (PAS-X Deployment, MES Infrastructure and tooling), ADAS (Radar and Computer Vision) and Industrial Automation (Teleoperation, LiDAR and Infrared), AI and Cloud Infrastructure Automation for Investment Funds analysis. Built & Flown competition rockets at ULAS HiPR for MachX (2nd in 2025) and EuRoC competitions (5th in Payload). Enjoy doing hard things.",
+    "I'm Adam Byrne, studying BSc+MSc ISE. I've worked in MedTech (PAS-X Deployment, MES Infrastructure and tooling), ADAS (Radar and Computer Vision) and Industrial Automation (Teleoperation, LiDAR and NIR/IR), AI and Cloud Infrastructure Automation for Investment Fund analysis. Built & Flown competition rockets at ULAS HiPR for MachX (2nd in 2025) and EuRoC competitions (5th in Payload). Enjoy doing hard things.",
 };
 
 export const BLOG: Metadata = {
   TITLE: "blog",
-  DESCRIPTION: "A collection of articles on topics I am passionate about.",
+  DESCRIPTION: "A collection of thoughts and ideas on software",
 };
 
 export const WORK: Metadata = {
   TITLE: "work",
-  DESCRIPTION: "Where I have worked and what I have done.",
+  DESCRIPTION: "Where I have worked and what I have done. The residencies are graded semester placements during my integrated MSc.",
 };
 
 export const PROJECTS: Metadata = {
   TITLE: "projects",
   DESCRIPTION:
-    "A collection of my projects, with links to repositories and demos.",
+    "A collection of my projects, with links to repositories and demos",
 };
 
 export const SOCIALS: Socials = [
