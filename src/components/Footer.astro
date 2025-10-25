@@ -8,74 +8,9 @@ import Newsletter from "@components/Newsletter.astro";
 <footer>
   <Container>
     <div class="relative pb-6">
-      <div class="absolute left-0 -top-20 w-80 text-sm">
-        <form name="sensorProFormFooter" id="sensorProFormFooter" method="post" autocomplete="off" class="flex flex-col gap-3 w-full p-4" action="https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh" target="_blank">
-          <div class="flex items-center gap-3 w-full">
-            <input
-              type="email"
-              name="spro_email"
-              id="spro_email_footer"
-              placeholder="your.email@example.com"
-              class="flex-1 px-3 py-2 border-2 border-black text-black bg-transparent focus:outline-none focus:ring-0 text-sm placeholder:text-gray-500"
-              required
-            >
-            <button
-              type="button"
-              id="Spro-Btn-Signup-Footer"
-              onclick="event.preventDefault(); if(window.SensorProForms) { SensorProForms.initialize('RegForm','https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh',''); SensorProForms.submitForm(false); } else { this.form.submit(); }"
-              class="px-6 py-2 border-2 border-black text-black bg-transparent hover:bg-black/5 focus:outline-none focus:ring-0 text-sm font-medium whitespace-nowrap transition-colors"
-            >
-              Subscribe
-            </button>
-          </div>
-          <div class="flex items-center gap-2 text-xs">
-            <input
-              type="checkbox"
-              id="spro_consent_footer"
-              name="spro_consent"
-              class="custom-checkbox-footer"
-              required
-            >
-            <label for="spro_consent_footer" class="text-black cursor-pointer">I agree to receive updates</label>
-          </div>
-          <div id="sensorProMsgFooter" class="text-red-600 text-xs mt-1 hidden"></div>
-        </form>
-        <style>
-          .custom-checkbox-footer {
-            position: relative;
-            width: 0.875rem;
-            height: 0.875rem;
-            border: 2px solid black;
-            background: transparent;
-            cursor: pointer;
-            appearance: none;
-            outline: none;
-            transition: all 0.2s ease;
-          }
-
-          .custom-checkbox-footer:hover {
-            background: rgba(0, 0, 0, 0.05);
-          }
-
-          .custom-checkbox-footer:checked {
-            background: black;
-          }
-
-          .custom-checkbox-footer:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 0.625rem;
-            font-weight: bold;
-          }
-
-          .custom-checkbox-footer:focus {
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-          }
-        </style>
+      <div class="absolute left-0 -top-20 ">
+        <Newsletter />
+     
       </div>
       <div class="absolute right-0 -top-20">
         <BackToTop />
