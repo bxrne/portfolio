@@ -11,7 +11,7 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: "home",
   DESCRIPTION:
-    "I'm Adam Byrne, studying BSc+MSc ISE. I've worked in MedTech (PAS-X Deployment, MES Infrastructure and tooling), ADAS (Radar and Computer Vision) and Industrial Automation (Teleoperation, LiDAR and NIR/IR), AI and Cloud Infrastructure Automation for Investment Fund analysis. Built & Flown competition rockets at ULAS HiPR for MachX (2nd in 2025) and EuRoC competitions (5th in Payload). Enjoy doing hard things.",
+    "I'm Adam Byrne, in final year of MSc [ISE] at UL. In my residencies I worked on robotic teleoperation, radar vision systems, manufacturing execution platforms and investment fund analytics software. Flew and wrote code for competition rockets with AI vision systems. I mainly write Go for projects and packages, experienced in C/C++, Python, Web and IaaC. Learning OCaml currently...",
 };
 
 export const BLOG: Metadata = {
