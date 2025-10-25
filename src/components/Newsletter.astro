@@ -1,34 +1,35 @@
 <link href="https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.css" rel="stylesheet">
 
-<form name="sensorProForm" id="sensorProForm" method="post" autocomplete="off" class="flex flex-col gap-4 w-full">
+<form name="sensorProForm" id="sensorProForm" method="post" autocomplete="off" class="flex flex-col gap-4 w-full p-6 " action="https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh" target="_blank">
   <div class="flex items-center gap-4 w-full">
     <input
       type="email"
       name="spro_email"
       id="spro_email"
       placeholder="email@newsletter.com"
-      class="flex-1 px-4 py-3 border-2 border-black text-black bg-transparent focus:outline-none focus:ring-0 text-lg"
+      class="flex-1 px-4 py-3 border-2 border-black text-black bg-transparent focus:outline-none focus:ring-0 text-lg placeholder:text-gray-500"
       required
     >
     <button
       type="button"
       id="Spro-Btn-Signup-StyleNo"
-      onclick="SensorProForms.initialize('RegForm','https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh','');SensorProForms.submitForm(false);"
-      class="px-8 py-3 border-2 border-black text-black bg-transparent hover:bg-black/5 focus:outline-none focus:ring-0 text-lg font-medium whitespace-nowrap"
+      onclick="event.preventDefault(); if(window.SensorProForms) { SensorProForms.initialize('RegForm','https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh',''); SensorProForms.submitForm(false); } else { this.form.submit(); }"
+      class="px-8 py-3 border-2 border-black text-black bg-transparent hover:bg-black/5 focus:outline-none focus:ring-0 text-lg font-medium whitespace-nowrap transition-colors"
     >
-      Sign Up
+     Subscribe 
     </button>
   </div>
   <div class="flex items-center gap-2 text-sm">
     <input
       type="checkbox"
       id="spro_consent"
+      name="spro_consent"
       class="custom-checkbox"
       required
     >
-    <label for="spro_consent" class="text-black">I want emails!</label>
+    <label for="spro_consent" class="text-black cursor-pointer">I want emails!</label>
   </div>
-    <div id="sensorProMsg" style="display:none;"></div>
+  <div id="sensorProMsg" class="text-red-600 text-sm mt-2 hidden"></div>
 </form>
 
 <script is:inline>
@@ -38,6 +39,22 @@ if (!window.SensorProForms) {
   script.src = 'https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.js';
   script.onload = () => {
     console.log('SensorPro script loaded');
+    // Override SensorPro submit to use native form submission
+    if (window.SensorProForms) {
+      const originalSubmit = window.SensorProForms.submitForm;
+      window.SensorProForms.submitForm = function(cookie) {
+        if (window.SensorProForms.validateForm()) {
+          if (cookie) {
+            window.SensorProForms.dropSignupCookie('sproSignupModal', 'signup', 0);
+          }
+          // Use native form submission instead of document.form.submit()
+          const form = document.getElementById('sensorProForm');
+          if (form && form instanceof HTMLFormElement) {
+            form.submit();
+          }
+        }
+      };
+    }
   };
   script.onerror = () => {
     console.error('Failed to load SensorPro script');
