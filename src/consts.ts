@@ -11,7 +11,7 @@ export const SITE: Site = {
 export const HOME: Metadata = {
   TITLE: "home",
   DESCRIPTION:
-    "I'm Adam Byrne, in final year of MSc [ISE] at UL. In my residencies I worked on robotic teleoperation, radar vision systems, manufacturing execution platforms and investment fund analytics software. Flew and wrote code for competition rockets with AI vision systems. I mainly write Go for projects and packages, experienced in C/C++, Python, Web and IaaC. Learning OCaml currently...",
+    "Interested in software and distributed systems. I’ve worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I’ve led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry. Mainly Go, Typescript, Python, Bash, C, C++, and Lua, via Kubernetes, Helm, Linux, and Terraform. I’m currently learning OCaml...",
 };
 
 export const BLOG: Metadata = {

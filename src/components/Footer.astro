@@ -2,20 +2,23 @@
 import Container from "@components/Container.astro";
 import { SITE } from "@consts";
 import BackToTop from "@components/BackToTop.astro";
+import Newsletter from "@components/Newsletter.astro";
 ---
 
 <footer>
   <Container>
-    <div class="relative">
+    <div class="relative pb-6">
+      <div class="absolute left-0 -top-20 w-80 scale-75 origin-top-left">
+        <Newsletter />
+      </div>
       <div class="absolute right-0 -top-20">
         <BackToTop />
       </div>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="text-center pt-4">
       <div>
         &copy; 2025 {SITE.NAME}
       </div>
-
     </div>
   </Container>
 </footer>
