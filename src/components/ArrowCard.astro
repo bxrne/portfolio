@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { readingTime } from "@lib/utils";
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">;
@@ -15,6 +16,9 @@ const { entry } = Astro.props;
     </div>
     <div class="text-sm text-gruvbox-fg1-light/60">
       {entry.data.description}
+    </div>
+    <div class="text-xs text-gruvbox-fg1-light/40 mt-1">
+      {readingTime(entry.body)}
     </div>
   </div>
   <svg 
