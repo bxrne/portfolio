@@ -1,3 +1,7 @@
+---
+import Checkbox from "@components/Checkbox.astro";
+---
+
 <link href="https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.css" rel="stylesheet">
 
 <form name="sensorProForm" id="sensorProForm" method="post" autocomplete="off" class="flex flex-col gap-4 w-full " action="https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh" target="_blank">
@@ -19,16 +23,7 @@
      Subscribe 
     </button>
   </div>
-  <div class="flex items-center gap-1 text-sm">
-    <input
-      type="checkbox"
-      id="spro_consent"
-      name="spro_consent"
-      class="custom-checkbox"
-      required
-    >
-    <label for="spro_consent" class="text-black cursor-pointer">I want emails!</label>
-  </div>
+   <Checkbox id="spro_consent" name="spro_consent" required={true} label="I want emails!" />
   <div id="sensorProMsg" class="text-red-600 text-sm mt-2 hidden"></div>
 </form>
 
@@ -79,39 +74,5 @@ if (!window.SensorProForms) {
     z-index: -1;
   }
 
-  /* Custom checkbox styling */
-  .custom-checkbox {
-    position: relative;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid black;
-    background: transparent;
-    cursor: pointer;
-    appearance: none;
-    outline: none;
-    transition: all 0.2s ease;
-  }
 
-  .custom-checkbox:hover {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  .custom-checkbox:checked {
-    background: black;
-  }
-
-  .custom-checkbox:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-  }
-
-  .custom-checkbox:focus {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  }
 </style>
