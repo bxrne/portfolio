@@ -2,7 +2,7 @@
 title: "TigerStyle: Global Coding Guidelines"
 author: "Firebeetle Engineering Team"
 date: 2024-11-01
-url: "#"
+url: "https://tigerstyle.dev/"
 tags: ["coding standards", "best practices", "software engineering", "code quality", "development methodology"]
 ---
 
