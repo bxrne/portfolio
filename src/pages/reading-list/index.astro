@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import { READING } from "@consts";
+
+const readings = (await getCollection("reading"))
+  .filter(reading => !reading.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<PageLayout title={READING.TITLE} description={READING.DESCRIPTION}>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate font-semibold text-black">
+        Reading List
+      </div>
+      <p class="animate">
+        {READING.DESCRIPTION}
+      </p>
+      <ul class="animate flex flex-col gap-4">
+        {readings.map((reading) => (
+          <li>
+            <ArrowCard entry={reading}/>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Container>
+</PageLayout>

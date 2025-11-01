@@ -3,31 +3,44 @@ import type { CollectionEntry } from "astro:content";
 import { readingTime } from "@lib/utils";
 
 type Props = {
-  entry: CollectionEntry<"blog"> | CollectionEntry<"projects">;
+  entry: any;
 }
 
 const { entry } = Astro.props;
 ---
 
-<a href={`/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10  border-2 border-black" >
+<a href={entry.collection === "reading" ? entry.data.url : `/${entry.collection}/${entry.slug}`} class="relative group flex flex-nowrap py-3 px-4 pr-10  border-2 border-black" >
   <div class="flex flex-col flex-1 truncate">
     <div class="font-semibold text-black">
       {entry.data.title}
     </div>
     <div class="text-sm text-gruvbox-fg1-light/60">
-      {entry.data.description}
+      {entry.collection === "reading" ? entry.data.author : entry.data.description}
     </div>
     <div class="text-xs text-gruvbox-fg1-light/40 mt-1">
-      {readingTime(entry.body)}
+      {entry.collection === "reading" ?
+        (entry.data.tags ? entry.data.tags.join(", ") : "") :
+        readingTime(entry.body)
+      }
     </div>
   </div>
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24"
-    class="absolute top-1/2 right-2 -translate-y-1/2 size-5 stroke-2 fill-none stroke-black">
-    <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
-    <polyline points="12 5 19 12 12 19" class="-translate-x-1 group-hover:translate-x-0" />
-  </svg>
+  {entry.collection === "reading" ? (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      class="absolute top-1/2 right-2 -translate-y-1/2 size-5 stroke-2 fill-none stroke-black">
+      <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
+      <polyline points="12 5 19 12 12 19" class="-translate-x-1 group-hover:translate-x-0" />
+    </svg>
+  ) : (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      class="absolute top-1/2 right-2 -translate-y-1/2 size-5 stroke-2 fill-none stroke-black">
+      <line x1="5" y1="12" x2="19" y2="12" class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
+      <polyline points="12 5 19 12 12 19" class="-translate-x-1 group-hover:translate-x-0" />
+    </svg>
+  )}
 </a>
 
 <style>
