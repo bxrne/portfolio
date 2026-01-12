@@ -5,4 +5,4 @@ dateStart: "01/12/2026"
 dateEnd: "05/19/2026"
 ---
 
-MSc Thesis Residency, providing agentic AI swarm and orchestration frameworks as scalable alternatives to no code development platforms for life sciences industry applications.
+MSc Thesis Residency, Exploring distributed agent-based AI orchestration frameworks as scalable software automation approaches for life sciences applications.
