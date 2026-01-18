@@ -1,4 +1,10 @@
-<button id="back-to-top" class="relative group w-fit flex pl-8 pr-3 py-1.5 flex-nowrap border-2 border-black text-black hover:bg-black/5 hover:text-black">
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+<button id="back-to-top" class:list={["relative group w-fit flex pl-8 pr-3 py-1.5 flex-nowrap border-2 border-black text-black hover:bg-black/5 hover:text-black", className]}>
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24"

@@ -7,14 +7,9 @@ import Newsletter from "@components/Newsletter.astro";
 
 <footer>
   <Container>
-    <div class="relative pb-6">
-      <div class="absolute left-0 -top-20 ">
-        <Newsletter />
-     
-      </div>
-      <div class="absolute right-0 -top-20">
-        <BackToTop />
-      </div>
+    <div class="flex flex-col md:flex-row md:items-start justify-between w-full gap-4">
+      <Newsletter />
+      <BackToTop />
     </div>
     <div class="text-center pt-4">
       <div>
