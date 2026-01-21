@@ -130,6 +130,12 @@ const work = await Promise.all(
               {SITE.EMAIL}
             </Link>
           </li>
+          <li class="flex gap-x-2 text-nowrap">
+            {"/"}
+            <Link href="/resume.pdf" external aria-label={`${SITE.NAME} CV`}>
+              cv
+            </Link>
+          </li>
         </ul>
       </section>
     </div>
