@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { readingTime } from "@lib/utils";
 
 type Props = {
   entry: CollectionEntry<"projects">;
@@ -22,7 +21,7 @@ const { entry } = Astro.props;
     </div>
   </div>
   <div class="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-600 font-mono pt-2 border-t border-neutral-200 dark:border-neutral-800">
-    <span>{new Date(entry.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
+    <span>{new Date(entry.data.date).toLocaleDateString("en-US", { year: "numeric", month: "short" })}</span>
     <span class="text-black dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">→</span>
   </div>
 </a>

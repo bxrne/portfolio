@@ -10,15 +10,15 @@ const readings = (await getCollection("reading"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const columns = [
-  { key: 'title', label: 'Title', sortable: true },
-  { key: 'author', label: 'Author', sortable: true },
-  { key: 'tags', label: 'Tags', sortable: false }
+  { key: "title", label: "Title", sortable: true },
+  { key: "author", label: "Author", sortable: true },
+  { key: "tags", label: "Tags", sortable: false }
 ];
 
 const tableData = readings.map(reading => ({
   title: `<a href="${reading.data.url}" target="_blank" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${reading.data.title} ↗</a>`,
   author: reading.data.author,
-  tags: reading.data.tags ? reading.data.tags.join(' · ') : '',
+  tags: reading.data.tags ? reading.data.tags.join(" · ") : "",
   date: reading.data.date.toISOString()
 }));
 ---

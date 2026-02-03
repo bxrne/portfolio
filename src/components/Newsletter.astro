@@ -30,20 +30,20 @@ import Checkbox from "@components/Checkbox.astro";
 <script is:inline>
 // @ts-ignore
 if (!window.SensorProForms) {
-  const script = document.createElement('script');
-  script.src = 'https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.js';
+  const script = document.createElement("script");
+  script.src = "https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.js";
   script.onload = () => {
-    console.log('SensorPro script loaded');
+    console.log("SensorPro script loaded");
     // Override SensorPro submit to use native form submission
     if (window.SensorProForms) {
       const originalSubmit = window.SensorProForms.submitForm;
       window.SensorProForms.submitForm = function(cookie) {
         if (window.SensorProForms.validateForm()) {
           if (cookie) {
-            window.SensorProForms.dropSignupCookie('sproSignupModal', 'signup', 0);
+            window.SensorProForms.dropSignupCookie("sproSignupModal", "signup", 0);
           }
           // Use native form submission instead of document.form.submit()
-          const form = document.getElementById('sensorProForm');
+          const form = document.getElementById("sensorProForm");
           if (form && form instanceof HTMLFormElement) {
             form.submit();
           }
@@ -52,7 +52,7 @@ if (!window.SensorProForms) {
     }
   };
   script.onerror = () => {
-    console.error('Failed to load SensorPro script');
+    console.error("Failed to load SensorPro script");
   };
   document.head.appendChild(script);
 }

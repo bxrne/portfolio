@@ -13,32 +13,32 @@
 <script is:inline>
   (function() {
     function setTheme(theme) {
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
         try {
-          localStorage.setItem('theme', 'dark');
+          localStorage.setItem("theme", "dark");
         } catch (e) {}
       } else {
-        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.remove("dark");
         try {
-          localStorage.setItem('theme', 'light');
+          localStorage.setItem("theme", "light");
         } catch (e) {}
       }
       updateToggleButton();
     }
 
     function updateToggleButton() {
-      const isDark = document.documentElement.classList.contains('dark');
-      const lightIcon = document.querySelector('.light-icon');
-      const darkIcon = document.querySelector('.dark-icon');
+      const isDark = document.documentElement.classList.contains("dark");
+      const lightIcon = document.querySelector(".light-icon");
+      const darkIcon = document.querySelector(".dark-icon");
       
       if (lightIcon && darkIcon) {
         if (isDark) {
-          lightIcon.classList.add('hidden');
-          darkIcon.classList.remove('hidden');
+          lightIcon.classList.add("hidden");
+          darkIcon.classList.remove("hidden");
         } else {
-          lightIcon.classList.remove('hidden');
-          darkIcon.classList.add('hidden');
+          lightIcon.classList.remove("hidden");
+          darkIcon.classList.add("hidden");
         }
       }
     }
@@ -46,19 +46,19 @@
     // Initialize theme immediately
     let savedTheme;
     try {
-      savedTheme = localStorage.getItem('theme');
+      savedTheme = localStorage.getItem("theme");
     } catch (e) {}
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
     setTheme(initialTheme);
 
     // Setup toggle after DOM loads
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleBtn = document.getElementById('theme-toggle');
+    document.addEventListener("DOMContentLoaded", function() {
+      const toggleBtn = document.getElementById("theme-toggle");
       if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-          const isDark = document.documentElement.classList.contains('dark');
-          setTheme(isDark ? 'light' : 'dark');
+        toggleBtn.addEventListener("click", function() {
+          const isDark = document.documentElement.classList.contains("dark");
+          setTheme(isDark ? "light" : "dark");
         });
       }
     });
