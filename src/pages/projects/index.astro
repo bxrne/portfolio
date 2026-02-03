@@ -2,35 +2,42 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import ArrowCard from "@components/ArrowCard.astro";
+import DataTable from "@components/DataTable.astro";
 import { PROJECTS } from "@consts";
-
-import Link from "@components/Link.astro";
 
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+const columns = [
+  { key: 'date', label: 'Date', sortable: true },
+  { key: 'title', label: 'Title', sortable: true },
+  { key: 'description', label: 'Description', sortable: false }
+];
+
+const tableData = projects.map(project => ({
+  date: new Date(project.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+  dateRaw: new Date(project.data.date).toISOString(),
+  title: `<a href="/projects/${project.slug}" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${project.data.title}</a>`,
+  description: project.data.description
+}));
 ---
 
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
   <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black">
+    <div class="space-y-6">
+      <h1 class="font-mono text-sm uppercase tracking-wider font-bold text-black dark:text-white border-b-2 border-black dark:border-white pb-1">
         Projects
-      </div>
-      <p class="animate">
-      {PROJECTS.DESCRIPTION} 
+      </h1>
+      <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
+        {PROJECTS.DESCRIPTION} 
       </p>
-
-        <ul class="animate flex flex-col gap-4">
-        {
-          projects.map((project) => (
-            <li>
-              <ArrowCard entry={project}/>
-            </li>
-          ))
-        }
-      </ul>
+      <DataTable 
+        columns={columns} 
+        data={tableData} 
+        searchPlaceholder="Search projects..."
+        defaultSortKey="dateRaw"
+      />
     </div>
   </Container>
 </PageLayout>
