@@ -1,0 +1,52 @@
+---
+---
+
+<button 
+  id="theme-toggle" 
+  aria-label="Toggle theme"
+  class="px-2 py-1 text-xs font-mono border border-black hover:bg-black hover:text-white transition-colors"
+>
+  <span class="light-icon">DARK</span>
+  <span class="dark-icon hidden">LIGHT</span>
+</button>
+
+<script>
+  function setTheme(theme: 'light' | 'dark') {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+    updateToggleButton();
+  }
+
+  function updateToggleButton() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const lightIcon = document.querySelector('.light-icon');
+    const darkIcon = document.querySelector('.dark-icon');
+    
+    if (lightIcon && darkIcon) {
+      if (isDark) {
+        lightIcon.classList.add('hidden');
+        darkIcon.classList.remove('hidden');
+      } else {
+        lightIcon.classList.remove('hidden');
+        darkIcon.classList.add('hidden');
+      }
+    }
+  }
+
+  // Initialize theme on page load
+  const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  setTheme(initialTheme);
+
+  // Toggle theme on button click
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    setTheme(isDark ? 'light' : 'dark');
+  });
+</script>
