@@ -80,7 +80,7 @@ const tableId = `table-${Math.random().toString(36).substr(2, 9)}`;
   const searchInput = wrapper.querySelector("[data-search-input]");
   const tbody = wrapper.querySelector("tbody");
   const resultCount = wrapper.querySelector("[data-result-count]");
-  const sortableHeaders = wrapper.querySelectorAll("[data-sortable=\"true\"]");
+  const sortableHeaders = wrapper.querySelectorAll('[data-sortable="true"]');
   
   let currentSort = { key: defaultSortKey || "", direction: "asc" };
   let allRows = Array.from(tbody.querySelectorAll("tr"));
