@@ -2,8 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 0 0 0;
+    --muted: 245 245 245;
+    --muted-foreground: 115 115 115;
+    --border: 0 0 0;
+    --accent: 0 0 0;
+    --accent-foreground: 255 255 255;
+  }
+}
+
 * {
-border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 html {
@@ -17,50 +29,48 @@ body {
 }
 
 body {
-  @apply font-sans antialiased;
+  @apply font-mono antialiased;
   @apply flex flex-col;
-  /* Gruvbox light: bg0 (cream) */
-  @apply bg-gruvbox-bg0-light;
-  /* Gruvbox light: fg0 with opacity */
-  @apply text-gruvbox-fg1-light/60;
+  @apply bg-white;
+  @apply text-neutral-800;
+  @apply text-sm leading-relaxed;
 }
 
 header {
-  @apply fixed top-0 left-0 right-0 z-50 py-5;
-  /* Gruvbox backgrounds solid */
-  @apply bg-gruvbox-bg0-light;
-  @apply border-b-4 border-black;
+  @apply border-b border-black py-3;
+  @apply bg-white;
+  @apply sticky top-0 z-50;
 }
 
 main {
-  @apply flex-1 py-32;
+  @apply flex-1 py-12;
 }
 
 footer {
-  @apply py-5 text-sm;
+  @apply py-8 text-xs border-t border-black;
+  @apply bg-neutral-50;
 }
 
 article {
-  @apply max-w-full prose prose-img:mx-auto prose-img:my-auto;
-  @apply prose-headings:font-semibold prose-headings:text-2xl prose-p:font-serif;
-  /* Headings: black */
-  @apply prose-headings:text-black;
+  @apply max-w-full prose prose-sm prose-neutral;
+  @apply prose-headings:font-mono prose-headings:font-normal prose-headings:text-black;
+  @apply prose-p:font-mono prose-p:text-neutral-700 prose-p:leading-relaxed;
+  @apply prose-a:font-mono prose-a:text-black prose-a:underline prose-a:decoration-1;
+  @apply prose-code:font-mono prose-code:text-xs prose-code:bg-neutral-100 prose-code:px-1 prose-code:py-0.5;
+  @apply prose-pre:bg-black prose-pre:text-white prose-pre:border prose-pre:border-black;
+  @apply prose-img:border prose-img:border-black;
 }
 
 @layer utilities {
   article a {
-    @apply font-sans underline underline-offset-2;
-    /* Black underline and text */
-    @apply decoration-black text-black;
+    @apply font-mono underline decoration-1 underline-offset-2;
+    @apply text-black;
   }
 
   article a:hover {
-    /* Keep hover for emphasis */
-    @apply decoration-black text-black;
+    @apply bg-black text-white;
   }
 }
-
-
 
 html #back-to-top {
   @apply pointer-events-none;

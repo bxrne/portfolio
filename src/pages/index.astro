@@ -33,27 +33,33 @@ const work = await Promise.all(
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <div class="space-y-16">
-      <section>
-        <article class="space-y-4">
-          <p class="animate">
-          Interested in software and distributed systems. I’ve worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I’ve led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry. Mainly Go, Typescript, Python, Bash, C, C++, and Lua, via Kubernetes, Helm, Linux, and Terraform. I’m currently learning OCaml...
+    <div class="space-y-12">
+      <!-- Intro Section -->
+      <section class="border-b border-neutral-200 pb-8">
+        <div class="space-y-4">
+          <p class="text-sm text-neutral-700 leading-relaxed font-mono">
+            Interested in software and distributed systems. I've worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I've led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry.
           </p>
-           </article>
+          <p class="text-xs text-neutral-500 font-mono">
+            Stack: Go · TypeScript · Python · Bash · C · C++ · Lua · Kubernetes · Helm · Linux · Terraform
+          </p>
+          <p class="text-xs text-neutral-500 font-mono">
+            Currently learning: OCaml
+          </p>
+        </div>
       </section>
 
-
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
-            Recent projects
-          </h5>
+      <!-- Projects Section -->
+      <section class="space-y-4">
+        <div class="flex items-baseline justify-between border-b border-black pb-1">
+          <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
+            Recent Projects
+          </h2>
           <Link href="/projects">
-            See all projects
+            <span class="text-xs">View all →</span>
           </Link>
         </div>
-        <ul class="flex flex-col gap-4">
+        <ul class="space-y-1">
           {projects.map(project => (
             <li>
               <ArrowCard entry={project} />
@@ -61,16 +67,18 @@ const work = await Promise.all(
           ))}
         </ul>
       </section>
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
-            Latest posts
-          </h5>
+
+      <!-- Blog Posts Section -->
+      <section class="space-y-4">
+        <div class="flex items-baseline justify-between border-b border-black pb-1">
+          <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
+            Latest Posts
+          </h2>
           <Link href="/blog">
-            See all posts
+            <span class="text-xs">View all →</span>
           </Link>
         </div>
-        <ul class="flex flex-col gap-4">
+        <ul class="space-y-1">
           {blog.map(post => (
             <li>
               <ArrowCard entry={post} />
@@ -78,65 +86,67 @@ const work = await Promise.all(
           ))}
         </ul>
       </section>
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
+
+      <!-- Work Experience Section -->
+      <section class="space-y-4">
+        <div class="flex items-baseline justify-between border-b border-black pb-1">
+          <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
             Work Experience
-          </h5>
+          </h2>
           <Link href="/work">
-            See all work
+            <span class="text-xs">View all →</span>
           </Link>
         </div>
-        <ul class="flex flex-col space-y-4">
+        <ul class="space-y-6">
           {work.map(entry => (
-            <li>
-              <div class="text-sm opacity-75">
+            <li class="border-l-2 border-neutral-200 pl-3">
+              <div class="text-xs text-neutral-500 font-mono mb-1">
                 {dateRange(entry.data.dateStart, entry.data.dateEnd)}
               </div>
-              <div class="font-semibold text-black">
+              <div class="font-mono text-sm font-bold text-black">
                 {entry.data.company}
               </div>
-              <div class="text-sm opacity-75">
+              <div class="text-xs text-neutral-600 font-mono mb-2">
                 {entry.data.role}
               </div>
-              <article>
+              <article class="text-xs">
                 <entry.Content />
               </article>
             </li>
           ))}
         </ul>
       </section>
-      <section class="animate space-y-4">
-        <h5 class="font-semibold text-black">
-          Let's Connect
-        </h5>
-        <article>
-          <p>
-            If you want to get in touch with me,
-            reach out on social media or send me an email.
-          </p>
-        </article>
-        <ul class="flex flex-wrap gap-2">
+
+      <!-- Contact Section -->
+      <section class="space-y-4 border-t border-neutral-200 pt-8">
+        <h2 class="font-mono text-xs uppercase tracking-wider font-bold border-b border-black pb-1">
+          Contact
+        </h2>
+        <p class="text-xs text-neutral-700 font-mono">
+          Reach out on social media or send an email.
+        </p>
+        <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-xs font-mono">
           {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
+            <div class="flex items-baseline gap-2">
+              <span class="text-neutral-400">→</span>
               <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
                 {SOCIAL.NAME}
               </Link>
-              {"/"}
-            </li>
+            </div>
           ))}
-          <li class="line-clamp-1">
+          <div class="flex items-baseline gap-2">
+            <span class="text-neutral-400">→</span>
             <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
-              {SITE.EMAIL}
+              Email
             </Link>
-          </li>
-          <li class="flex gap-x-2 text-nowrap">
-            {"/"}
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="text-neutral-400">→</span>
             <Link href="/resume.pdf" external aria-label={`${SITE.NAME} CV`}>
-              cv
+              Resume (PDF)
             </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       </section>
     </div>
   </Container>

@@ -7,13 +7,15 @@ import Newsletter from "@components/Newsletter.astro";
 
 <footer>
   <Container>
-    <div class="flex flex-col md:flex-row md:items-start justify-between w-full gap-4">
-      <Newsletter />
-      <BackToTop />
-    </div>
-    <div class="text-center pt-4">
-      <div>
-        &copy; 2026 {SITE.NAME}
+    <div class="flex flex-col gap-6">
+      <div class="flex flex-col md:flex-row md:items-start justify-between w-full gap-4">
+        <Newsletter />
+        <BackToTop />
+      </div>
+      <div class="text-center font-mono">
+        <div class="text-neutral-500">
+          © 2026 {SITE.NAME}
+        </div>
       </div>
     </div>
   </Container>
