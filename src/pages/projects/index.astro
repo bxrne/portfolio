@@ -10,13 +10,13 @@ const projects = (await getCollection("projects"))
   .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 
 const columns = [
-  { key: 'date', label: 'Date', sortable: true },
-  { key: 'title', label: 'Title', sortable: true },
-  { key: 'description', label: 'Description', sortable: false }
+  { key: "date", label: "Date", sortable: true },
+  { key: "title", label: "Title", sortable: true },
+  { key: "description", label: "Description", sortable: false }
 ];
 
 const tableData = projects.map(project => ({
-  date: new Date(project.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+  date: new Date(project.data.date).toLocaleDateString("en-US", { year: "numeric", month: "short" }),
   dateRaw: new Date(project.data.date).toISOString(),
   title: `<a href="/projects/${project.slug}" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${project.data.title}</a>`,
   description: project.data.description
