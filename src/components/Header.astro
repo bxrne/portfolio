@@ -1,6 +1,7 @@
 ---
 import Container from "@components/Container.astro";
 import Link from "@components/Link.astro";
+import ThemeToggle from "@components/ThemeToggle.astro";
 import { SITE } from "@consts";
 ---
 
@@ -8,7 +9,7 @@ import { SITE } from "@consts";
   <Container>
     <div class="flex items-baseline justify-between gap-4">
       <Link href="/" underline={false}>
-        <div class="font-mono text-black font-bold uppercase text-xs tracking-wider">
+        <div class="font-mono text-black dark:text-white font-bold uppercase text-xs tracking-wider">
           {SITE.NAME}
         </div>
       </Link>
@@ -25,6 +26,8 @@ import { SITE } from "@consts";
         <Link href="/reading-list">
           reading
         </Link>
+        <span class="text-neutral-300 dark:text-neutral-700">|</span>
+        <ThemeToggle />
       </nav>
     </div>
   </Container>

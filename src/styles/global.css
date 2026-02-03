@@ -11,6 +11,18 @@
     --border: 0 0 0;
     --accent: 0 0 0;
     --accent-foreground: 255 255 255;
+    --card-bg: 250 250 250;
+  }
+
+  .dark {
+    --background: 10 10 10;
+    --foreground: 250 250 250;
+    --muted: 30 30 30;
+    --muted-foreground: 163 163 163;
+    --border: 250 250 250;
+    --accent: 250 250 250;
+    --accent-foreground: 10 10 10;
+    --card-bg: 20 20 20;
   }
 }
 
@@ -31,15 +43,17 @@ body {
 body {
   @apply font-mono antialiased;
   @apply flex flex-col;
-  @apply bg-white;
-  @apply text-neutral-800;
+  @apply bg-white dark:bg-neutral-950;
+  @apply text-neutral-800 dark:text-neutral-200;
   @apply text-sm leading-relaxed;
+  @apply transition-colors duration-200;
 }
 
 header {
-  @apply border-b border-black py-3;
-  @apply bg-white;
+  @apply border-b border-black dark:border-white py-3;
+  @apply bg-white dark:bg-neutral-950;
   @apply sticky top-0 z-50;
+  @apply transition-colors duration-200;
 }
 
 main {
@@ -47,28 +61,29 @@ main {
 }
 
 footer {
-  @apply py-8 text-xs border-t border-black;
-  @apply bg-neutral-50;
+  @apply py-8 text-xs border-t border-black dark:border-white;
+  @apply bg-neutral-50 dark:bg-neutral-900;
+  @apply transition-colors duration-200;
 }
 
 article {
-  @apply max-w-full prose prose-sm prose-neutral;
-  @apply prose-headings:font-mono prose-headings:font-normal prose-headings:text-black;
-  @apply prose-p:font-mono prose-p:text-neutral-700 prose-p:leading-relaxed;
-  @apply prose-a:font-mono prose-a:text-black prose-a:underline prose-a:decoration-1;
-  @apply prose-code:font-mono prose-code:text-xs prose-code:bg-neutral-100 prose-code:px-1 prose-code:py-0.5;
-  @apply prose-pre:bg-black prose-pre:text-white prose-pre:border prose-pre:border-black;
-  @apply prose-img:border prose-img:border-black;
+  @apply max-w-full prose prose-sm prose-neutral dark:prose-invert;
+  @apply prose-headings:font-mono prose-headings:font-normal prose-headings:text-black dark:prose-headings:text-white;
+  @apply prose-p:font-mono prose-p:text-neutral-700 dark:prose-p:text-neutral-300 prose-p:leading-relaxed;
+  @apply prose-a:font-mono prose-a:text-black dark:prose-a:text-white prose-a:underline prose-a:decoration-1;
+  @apply prose-code:font-mono prose-code:text-xs prose-code:bg-neutral-100 dark:prose-code:bg-neutral-800 prose-code:px-1 prose-code:py-0.5;
+  @apply prose-pre:bg-black dark:prose-pre:bg-neutral-900 prose-pre:text-white prose-pre:border prose-pre:border-black dark:prose-pre:border-white;
+  @apply prose-img:border prose-img:border-black dark:prose-img:border-white;
 }
 
 @layer utilities {
   article a {
     @apply font-mono underline decoration-1 underline-offset-2;
-    @apply text-black;
+    @apply text-black dark:text-white;
   }
 
   article a:hover {
-    @apply bg-black text-white;
+    @apply bg-black dark:bg-white text-white dark:text-black;
   }
 }
 

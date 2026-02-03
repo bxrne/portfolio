@@ -35,25 +35,27 @@ const work = await Promise.all(
   <Container>
     <div class="space-y-12">
       <!-- Intro Section -->
-      <section class="border-b border-neutral-200 pb-8">
+      <section class="border border-black dark:border-white p-6 bg-neutral-50 dark:bg-neutral-900">
         <div class="space-y-4">
-          <p class="text-sm text-neutral-700 leading-relaxed font-mono">
+          <p class="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-mono">
             Interested in software and distributed systems. I've worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I've led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry.
           </p>
-          <p class="text-xs text-neutral-500 font-mono">
-            Stack: Go · TypeScript · Python · Bash · C · C++ · Lua · Kubernetes · Helm · Linux · Terraform
-          </p>
-          <p class="text-xs text-neutral-500 font-mono">
-            Currently learning: OCaml
-          </p>
+          <div class="border-t border-neutral-200 dark:border-neutral-800 pt-4 space-y-2">
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+              <span class="text-black dark:text-white font-bold">STACK:</span> Go · TypeScript · Python · Bash · C · C++ · Lua · Kubernetes · Helm · Linux · Terraform
+            </p>
+            <p class="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+              <span class="text-black dark:text-white font-bold">CURRENT:</span> Building a temporal database in Zig
+            </p>
+          </div>
         </div>
       </section>
 
       <!-- Projects Section -->
       <section class="space-y-4">
-        <div class="flex items-baseline justify-between border-b border-black pb-1">
+        <div class="flex items-baseline justify-between border-b-2 border-black dark:border-white pb-1 mb-2">
           <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
-            Recent Projects
+            [01] Recent Projects
           </h2>
           <Link href="/projects">
             <span class="text-xs">View all →</span>
@@ -70,9 +72,9 @@ const work = await Promise.all(
 
       <!-- Blog Posts Section -->
       <section class="space-y-4">
-        <div class="flex items-baseline justify-between border-b border-black pb-1">
+        <div class="flex items-baseline justify-between border-b-2 border-black dark:border-white pb-1 mb-2">
           <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
-            Latest Posts
+            [02] Latest Posts
           </h2>
           <Link href="/blog">
             <span class="text-xs">View all →</span>
@@ -88,10 +90,10 @@ const work = await Promise.all(
       </section>
 
       <!-- Work Experience Section -->
-      <section class="space-y-4">
-        <div class="flex items-baseline justify-between border-b border-black pb-1">
+      <section class="space-y-4 border border-black dark:border-white p-4 bg-neutral-50 dark:bg-neutral-900">
+        <div class="flex items-baseline justify-between border-b-2 border-black dark:border-white pb-1 mb-2">
           <h2 class="font-mono text-xs uppercase tracking-wider font-bold">
-            Work Experience
+            [03] Work Experience
           </h2>
           <Link href="/work">
             <span class="text-xs">View all →</span>
@@ -99,14 +101,14 @@ const work = await Promise.all(
         </div>
         <ul class="space-y-6">
           {work.map(entry => (
-            <li class="border-l-2 border-neutral-200 pl-3">
-              <div class="text-xs text-neutral-500 font-mono mb-1">
+            <li class="border-l-2 border-neutral-300 dark:border-neutral-700 pl-3">
+              <div class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mb-1">
                 {dateRange(entry.data.dateStart, entry.data.dateEnd)}
               </div>
-              <div class="font-mono text-sm font-bold text-black">
+              <div class="font-mono text-sm font-bold text-black dark:text-white">
                 {entry.data.company}
               </div>
-              <div class="text-xs text-neutral-600 font-mono mb-2">
+              <div class="text-xs text-neutral-600 dark:text-neutral-400 font-mono mb-2">
                 {entry.data.role}
               </div>
               <article class="text-xs">
@@ -118,30 +120,30 @@ const work = await Promise.all(
       </section>
 
       <!-- Contact Section -->
-      <section class="space-y-4 border-t border-neutral-200 pt-8">
-        <h2 class="font-mono text-xs uppercase tracking-wider font-bold border-b border-black pb-1">
-          Contact
+      <section class="space-y-4 border-t-2 border-black dark:border-white pt-8">
+        <h2 class="font-mono text-xs uppercase tracking-wider font-bold border-b-2 border-black dark:border-white pb-1">
+          [04] Contact
         </h2>
-        <p class="text-xs text-neutral-700 font-mono">
+        <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
           Reach out on social media or send an email.
         </p>
         <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-xs font-mono">
           {SOCIALS.map(SOCIAL => (
             <div class="flex items-baseline gap-2">
-              <span class="text-neutral-400">→</span>
+              <span class="text-neutral-400 dark:text-neutral-600">→</span>
               <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
                 {SOCIAL.NAME}
               </Link>
             </div>
           ))}
           <div class="flex items-baseline gap-2">
-            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-400 dark:text-neutral-600">→</span>
             <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
               Email
             </Link>
           </div>
           <div class="flex items-baseline gap-2">
-            <span class="text-neutral-400">→</span>
+            <span class="text-neutral-400 dark:text-neutral-600">→</span>
             <Link href="/resume.pdf" external aria-label={`${SITE.NAME} CV`}>
               Resume (PDF)
             </Link>
