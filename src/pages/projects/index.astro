@@ -2,25 +2,15 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import DataTable from "@components/DataTable.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import Link from "@components/Link.astro";
+import { readingTime } from "@lib/utils";
 import { PROJECTS } from "@consts";
 
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 
-const columns = [
-  { key: 'date', label: 'Date', sortable: true },
-  { key: 'title', label: 'Title', sortable: true },
-  { key: 'description', label: 'Description', sortable: false }
-];
-
-const tableData = projects.map(project => ({
-  date: new Date(project.data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
-  dateRaw: new Date(project.data.date).toISOString(),
-  title: `<a href="/projects/${project.slug}" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${project.data.title}</a>`,
-  description: project.data.description
-}));
 ---
 
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
@@ -32,12 +22,39 @@ const tableData = projects.map(project => ({
       <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
         {PROJECTS.DESCRIPTION} 
       </p>
-      <DataTable 
-        columns={columns} 
-        data={tableData} 
-        searchPlaceholder="Search projects..."
-        defaultSortKey="dateRaw"
-      />
+      <ul class="grid gap-6 grid-cols-1 sm:grid-cols-2">
+        {projects.map(project => (
+          <li class="flex flex-col gap-3 border border-black dark:border-white bg-neutral-50 dark:bg-neutral-900 p-4">
+            <div class="flex flex-wrap items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+              <FormattedDate date={project.data.date} />
+              <span>•</span>
+              <span>{readingTime(project.body)}</span>
+            </div>
+            <h2 class="font-mono text-sm font-bold text-black dark:text-white">
+              <Link href={`/projects/${project.slug}`}>
+                {project.data.title}
+              </Link>
+            </h2>
+            <p class="text-xs text-neutral-600 dark:text-neutral-400 font-mono">
+              {project.data.description}
+            </p>
+            {(project.data.demoURL || project.data.repoURL) && (
+              <nav class="flex flex-wrap gap-2 text-xs font-mono">
+                {project.data.demoURL && (
+                  <Link href={project.data.demoURL} external>
+                    demo
+                  </Link>
+                )}
+                {project.data.repoURL && (
+                  <Link href={project.data.repoURL} external>
+                    repo
+                  </Link>
+                )}
+              </nav>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   </Container>
 </PageLayout>

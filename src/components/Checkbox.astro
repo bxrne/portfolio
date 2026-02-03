@@ -9,7 +9,7 @@ interface Props {
 const { id, name, required = false, label, ...rest } = Astro.props;
 ---
 
-<div class="flex items-center gap-1 text-sm">
+<div class="flex items-center gap-1 text-sm text-black dark:text-white">
   <input
     type="checkbox"
     id={id}
@@ -18,7 +18,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
     required={required}
     {...rest}
   >
-  <label for={id} class="text-black cursor-pointer">{label}</label>
+  <label for={id} class="cursor-pointer">{label}</label>
 </div>
 
 <style>
@@ -27,7 +27,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
     width: 1rem;
     height: 1rem;
     border: 2px solid black;
-    background: transparent;
+    background: rgb(245, 245, 245);
     cursor: pointer;
     appearance: none;
     outline: none;
@@ -35,7 +35,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
   }
 
   .custom-checkbox:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgb(229, 229, 229);
   }
 
   .custom-checkbox:checked {
@@ -43,7 +43,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
   }
 
   .custom-checkbox:checked::after {
-    content: '✓';
+    content: "✓";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -55,5 +55,22 @@ const { id, name, required = false, label, ...rest } = Astro.props;
 
   .custom-checkbox:focus {
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .custom-checkbox {
+    border-color: white;
+    background: rgb(38, 38, 38);
+  }
+
+  .dark .custom-checkbox:hover {
+    background: rgb(64, 64, 64);
+  }
+
+  .dark .custom-checkbox:checked {
+    background: white;
+  }
+
+  .dark .custom-checkbox:checked::after {
+    color: black;
   }
 </style>
