@@ -4,49 +4,63 @@
 <button 
   id="theme-toggle" 
   aria-label="Toggle theme"
-  class="px-2 py-1 text-xs font-mono border border-black hover:bg-black hover:text-white transition-colors"
+  class="px-2 py-1 text-xs font-mono border border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors"
 >
   <span class="light-icon">DARK</span>
   <span class="dark-icon hidden">LIGHT</span>
 </button>
 
-<script>
-  function setTheme(theme: 'light' | 'dark') {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-    updateToggleButton();
-  }
-
-  function updateToggleButton() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const lightIcon = document.querySelector('.light-icon');
-    const darkIcon = document.querySelector('.dark-icon');
-    
-    if (lightIcon && darkIcon) {
-      if (isDark) {
-        lightIcon.classList.add('hidden');
-        darkIcon.classList.remove('hidden');
+<script is:inline>
+  (function() {
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        try {
+          localStorage.setItem('theme', 'dark');
+        } catch (e) {}
       } else {
-        lightIcon.classList.remove('hidden');
-        darkIcon.classList.add('hidden');
+        document.documentElement.classList.remove('dark');
+        try {
+          localStorage.setItem('theme', 'light');
+        } catch (e) {}
+      }
+      updateToggleButton();
+    }
+
+    function updateToggleButton() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const lightIcon = document.querySelector('.light-icon');
+      const darkIcon = document.querySelector('.dark-icon');
+      
+      if (lightIcon && darkIcon) {
+        if (isDark) {
+          lightIcon.classList.add('hidden');
+          darkIcon.classList.remove('hidden');
+        } else {
+          lightIcon.classList.remove('hidden');
+          darkIcon.classList.add('hidden');
+        }
       }
     }
-  }
 
-  // Initialize theme on page load
-  const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-  setTheme(initialTheme);
+    // Initialize theme immediately
+    let savedTheme;
+    try {
+      savedTheme = localStorage.getItem('theme');
+    } catch (e) {}
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    setTheme(initialTheme);
 
-  // Toggle theme on button click
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setTheme(isDark ? 'light' : 'dark');
-  });
+    // Setup toggle after DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+          const isDark = document.documentElement.classList.contains('dark');
+          setTheme(isDark ? 'light' : 'dark');
+        });
+      }
+    });
+  })();
 </script>

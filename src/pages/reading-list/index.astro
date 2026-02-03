@@ -2,30 +2,42 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import ArrowCard from "@components/ArrowCard.astro";
+import DataTable from "@components/DataTable.astro";
 import { READING } from "@consts";
 
 const readings = (await getCollection("reading"))
   .filter(reading => !reading.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const columns = [
+  { key: 'title', label: 'Title', sortable: true },
+  { key: 'author', label: 'Author', sortable: true },
+  { key: 'tags', label: 'Tags', sortable: false }
+];
+
+const tableData = readings.map(reading => ({
+  title: `<a href="${reading.data.url}" target="_blank" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${reading.data.title} ↗</a>`,
+  author: reading.data.author,
+  tags: reading.data.tags ? reading.data.tags.join(' · ') : '',
+  date: reading.data.date.toISOString()
+}));
 ---
 
 <PageLayout title={READING.TITLE} description={READING.DESCRIPTION}>
   <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black">
+    <div class="space-y-6">
+      <h1 class="font-mono text-sm uppercase tracking-wider font-bold text-black dark:text-white border-b-2 border-black dark:border-white pb-1">
         Reading List
-      </div>
-      <p class="animate">
+      </h1>
+      <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
         {READING.DESCRIPTION}
       </p>
-      <ul class="animate flex flex-col gap-4">
-        {readings.map((reading) => (
-          <li>
-            <ArrowCard entry={reading}/>
-          </li>
-        ))}
-      </ul>
+      <DataTable 
+        columns={columns} 
+        data={tableData} 
+        searchPlaceholder="Search reading list..."
+        defaultSortKey="date"
+      />
     </div>
   </Container>
 </PageLayout>

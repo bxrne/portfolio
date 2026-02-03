@@ -20,29 +20,29 @@ const work = await Promise.all(
 
 <PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
   <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black">
+    <div class="space-y-6">
+      <h1 class="font-mono text-sm uppercase tracking-wider font-bold text-black dark:text-white border-b-2 border-black dark:border-white pb-1">
         Work
-      </div>
-      <p class="animate">
-      {WORK.DESCRIPTION} <Link href="/resume.pdf" external>
+      </h1>
+      <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
+        {WORK.DESCRIPTION} <Link href="/resume.pdf" external>
           (open CV)
         </Link>
       </p>
-      <ul class="flex flex-col space-y-4">
+      <ul class="flex flex-col space-y-6">
         { 
           work.map(entry => (
-            <li class="animate">
-              <div class="text-sm opacity-75">
+            <li class="border-l-2 border-black dark:border-white pl-4">
+              <div class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mb-1">
                 {dateRange(entry.data.dateStart, entry.data.dateEnd)}
               </div>
-              <div class="font-semibold text-black">
+              <div class="font-mono text-sm font-bold text-black dark:text-white">
                 {entry.data.company}
               </div>
-              <div class="text-sm opacity-75">
+              <div class="text-xs text-neutral-600 dark:text-neutral-400 font-mono mb-2">
                 {entry.data.role}
               </div>
-              <article>
+              <article class="text-xs">
                 <entry.Content />
               </article>
             </li>

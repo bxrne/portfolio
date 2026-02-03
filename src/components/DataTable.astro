@@ -1,0 +1,175 @@
+---
+export interface TableColumn {
+  key: string;
+  label: string;
+  sortable?: boolean;
+}
+
+export interface TableRow {
+  [key: string]: any;
+}
+
+interface Props {
+  columns: TableColumn[];
+  data: TableRow[];
+  searchPlaceholder?: string;
+  defaultSortKey?: string;
+}
+
+const { columns, data, searchPlaceholder = "Search...", defaultSortKey } = Astro.props;
+const tableId = `table-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class="data-table-wrapper" data-table-id={tableId}>
+  <div class="mb-4">
+    <input 
+      type="text" 
+      class="search-input w-full px-3 py-2 text-xs font-mono border border-black dark:border-white bg-white dark:bg-neutral-950 text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+      placeholder={searchPlaceholder}
+      data-search-input
+    />
+  </div>
+  
+  <div class="overflow-x-auto border border-black dark:border-white">
+    <table class="w-full text-xs font-mono">
+      <thead class="border-b-2 border-black dark:border-white bg-neutral-50 dark:bg-neutral-900">
+        <tr>
+          {columns.map((col) => (
+            <th 
+              class={`text-left px-3 py-2 font-bold uppercase tracking-wider ${col.sortable !== false ? 'cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 select-none' : ''}`}
+              data-sort-key={col.sortable !== false ? col.key : undefined}
+              data-sortable={col.sortable !== false}
+            >
+              <div class="flex items-center gap-2">
+                <span>{col.label}</span>
+                {col.sortable !== false && (
+                  <span class="sort-indicator text-neutral-400 dark:text-neutral-600" data-sort-icon>⇅</span>
+                )}
+              </div>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-neutral-200 dark:divide-neutral-800">
+        {data.map((row, idx) => (
+          <tr 
+            class="hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+            data-row-index={idx}
+            data-row-data={JSON.stringify(row)}
+          >
+            {columns.map((col) => (
+              <td class="px-3 py-2 text-neutral-700 dark:text-neutral-300" data-cell-key={col.key}>
+                <Fragment set:html={row[col.key]} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="mt-2 text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+    <span data-result-count>{data.length}</span> results
+  </div>
+</div>
+
+<script define:vars={{ tableId, defaultSortKey }}>
+  const wrapper = document.querySelector(`[data-table-id="${tableId}"]`);
+  if (!wrapper) throw new Error('Table wrapper not found');
+  
+  const searchInput = wrapper.querySelector('[data-search-input]');
+  const tbody = wrapper.querySelector('tbody');
+  const resultCount = wrapper.querySelector('[data-result-count]');
+  const sortableHeaders = wrapper.querySelectorAll('[data-sortable="true"]');
+  
+  let currentSort = { key: defaultSortKey || '', direction: 'asc' };
+  let allRows = Array.from(tbody.querySelectorAll('tr'));
+  
+  // Store original data
+  allRows.forEach(row => {
+    const data = JSON.parse(row.getAttribute('data-row-data'));
+    row._originalData = data;
+  });
+  
+  function filterRows(searchTerm) {
+    const term = searchTerm.toLowerCase().trim();
+    let visibleCount = 0;
+    
+    allRows.forEach(row => {
+      const rowData = row._originalData;
+      const matchesSearch = !term || Object.values(rowData).some(val => 
+        String(val).toLowerCase().includes(term)
+      );
+      
+      if (matchesSearch) {
+        row.style.display = '';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+    
+    resultCount.textContent = visibleCount;
+  }
+  
+  function sortRows(key, direction) {
+    const sortedRows = [...allRows].sort((a, b) => {
+      const aVal = a._originalData[key];
+      const bVal = b._originalData[key];
+      
+      // Handle dates
+      const aDate = new Date(aVal);
+      const bDate = new Date(bVal);
+      if (!isNaN(aDate) && !isNaN(bDate)) {
+        return direction === 'asc' ? aDate - bDate : bDate - aDate;
+      }
+      
+      // Handle strings/numbers
+      if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+    
+    // Re-append rows in sorted order
+    sortedRows.forEach(row => tbody.appendChild(row));
+    allRows = sortedRows;
+    
+    // Update sort indicators
+    sortableHeaders.forEach(header => {
+      const icon = header.querySelector('[data-sort-icon]');
+      if (header.getAttribute('data-sort-key') === key) {
+        icon.textContent = direction === 'asc' ? '↑' : '↓';
+        icon.classList.remove('text-neutral-400', 'dark:text-neutral-600');
+        icon.classList.add('text-black', 'dark:text-white');
+      } else {
+        icon.textContent = '⇅';
+        icon.classList.add('text-neutral-400', 'dark:text-neutral-600');
+        icon.classList.remove('text-black', 'dark:text-white');
+      }
+    });
+  }
+  
+  // Search functionality
+  searchInput?.addEventListener('input', (e) => {
+    filterRows(e.target.value);
+  });
+  
+  // Sort functionality
+  sortableHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const key = header.getAttribute('data-sort-key');
+      if (currentSort.key === key) {
+        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentSort.key = key;
+        currentSort.direction = 'asc';
+      }
+      sortRows(currentSort.key, currentSort.direction);
+    });
+  });
+  
+  // Initial sort if specified
+  if (defaultSortKey) {
+    sortRows(defaultSortKey, 'desc');
+  }
+</script>

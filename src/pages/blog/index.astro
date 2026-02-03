@@ -2,60 +2,45 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import ArrowCard from "@components/ArrowCard.astro";
+import DataTable from "@components/DataTable.astro";
 import { BLOG } from "@consts";
+import { readingTime } from "@lib/utils";
 
-import Link from "@components/Link.astro";
-
-const data = (await getCollection("blog"))
+const posts = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
-type Acc = {
-  [year: string]: CollectionEntry<"blog">[];
-}
 
-const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {});
+const columns = [
+  { key: 'date', label: 'Date', sortable: true },
+  { key: 'title', label: 'Title', sortable: true },
+  { key: 'description', label: 'Description', sortable: false },
+  { key: 'readTime', label: 'Read Time', sortable: true }
+];
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const tableData = posts.map(post => ({
+  date: post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+  dateRaw: post.data.date.toISOString(),
+  title: `<a href="/blog/${post.slug}" class="underline hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black px-1 -mx-1 transition-colors">${post.data.title}</a>`,
+  description: post.data.description,
+  readTime: readingTime(post.body)
+}));
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
   <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-black">
+    <div class="space-y-6">
+      <h1 class="font-mono text-sm uppercase tracking-wider font-bold text-black dark:text-white border-b-2 border-black dark:border-white pb-1">
         Blog
-      </div>
-  <p class="animate">
-  {BLOG.DESCRIPTION} 
+      </h1>
+      <p class="text-xs text-neutral-700 dark:text-neutral-300 font-mono">
+        {BLOG.DESCRIPTION} 
       </p>
-      <div class="space-y-4">
-        {years.map(year => (
-          <section class="animate space-y-4">
-            <div class="font-semibold text-black">
-              {year}
-            </div>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map((post) => (
-                    <li>
-                      <ArrowCard entry={post}/>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
+      <DataTable 
+        columns={columns} 
+        data={tableData} 
+        searchPlaceholder="Search posts..."
+        defaultSortKey="dateRaw"
+      />
     </div>
   </Container>
 </PageLayout>
