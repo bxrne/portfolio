@@ -18,7 +18,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
     required={required}
     {...rest}
   >
-  <label for={id} class="text-black cursor-pointer">{label}</label>
+  <label for={id} class="text-terminal-fg cursor-pointer">{label}</label>
 </div>
 
 <style>
@@ -26,7 +26,7 @@ const { id, name, required = false, label, ...rest } = Astro.props;
     position: relative;
     width: 1rem;
     height: 1rem;
-    border: 2px solid black;
+    border: 1px solid rgb(42 49 74);
     background: transparent;
     cursor: pointer;
     appearance: none;
@@ -35,11 +35,12 @@ const { id, name, required = false, label, ...rest } = Astro.props;
   }
 
   .custom-checkbox:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(61, 39, 24, 0.5);
   }
 
   .custom-checkbox:checked {
-    background: black;
+    background: rgb(255, 152, 56);
+    border-color: rgb(255, 152, 56);
   }
 
   .custom-checkbox:checked::after {
@@ -48,12 +49,12 @@ const { id, name, required = false, label, ...rest } = Astro.props;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: rgb(6, 8, 15);
     font-size: 0.75rem;
     font-weight: bold;
   }
 
   .custom-checkbox:focus {
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 2px rgba(255, 152, 56, 0.3);
   }
 </style>

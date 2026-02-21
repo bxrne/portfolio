@@ -5,8 +5,6 @@ import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { PROJECTS } from "@consts";
 
-import Link from "@components/Link.astro";
-
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
@@ -15,7 +13,7 @@ const projects = (await getCollection("projects"))
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
   <Container>
     <div class="space-y-10">
-      <div class="animate font-semibold text-black">
+      <div class="animate font-semibold text-terminal-accent">
         Projects
       </div>
       <p class="animate">

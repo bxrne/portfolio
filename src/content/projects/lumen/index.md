@@ -2,7 +2,6 @@
 title: "lumen"
 description: "Trying 'Ray Tracing in One Weekend' in OCaml"
 date: "Dec 25 2025"
-demoURL: "https://github.com/bxrne/lumen"
 repoURL: "https://github.com/bxrne/lumen"
 ---
 

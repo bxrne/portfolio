@@ -4,33 +4,15 @@ interface Props {
 }
 const { class: className } = Astro.props;
 ---
-<button id="back-to-top" class:list={["relative group w-fit flex pl-8 pr-3 py-1.5 flex-nowrap border-2 border-black text-black hover:bg-black/5 hover:text-black", className]}>
+<button id="back-to-top" class:list={["relative group w-fit flex pl-8 pr-3 py-1.5 flex-nowrap border border-terminal-border bg-terminal-panel/70 text-terminal-fg hover:border-terminal-accent hover:text-terminal-accent transition-colors", className]}>
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24"
-    class="absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-black rotate-90">
+    class="absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-terminal-accent rotate-90">
     <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
     <polyline points="12 5 5 12 12 19" class="translate-x-1 group-hover:translate-x-0" />
   </svg>
-  <div class="text-sm text-black">
+  <div class="text-sm">
     Back to top
     </div>
 </button>
-
-<style>
-  button {
-    position: relative;
-  }
-  button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgb(251, 241, 199);
-    transform: translate(2px, 2px);
-    z-index: -1;
-  }
-</style>
-

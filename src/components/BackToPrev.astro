@@ -6,7 +6,7 @@ type Props = {
 const { href } = Astro.props;
 ---
  
-<a href={href} class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap border-2 border-black text-black hover:bg-black/5 hover:text-black">
+<a href={href} class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap border border-terminal-border bg-terminal-panel/70 text-terminal-fg hover:border-terminal-accent hover:text-terminal-accent transition-colors">
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24"
@@ -18,21 +18,3 @@ const { href } = Astro.props;
     <slot/>
   </div>
 </a>
-
-<style>
-  a {
-    position: relative;
-  }
-  a::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgb(251, 241, 199);
-    transform: translate(2px, 2px);
-    z-index: -1;
-  }
-</style>
-

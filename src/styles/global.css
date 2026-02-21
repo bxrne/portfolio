@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 * {
-border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 
 html {
   overflow-y: scroll;
-  color-scheme: light;
+  color-scheme: dark;
+  @apply bg-terminal-bg text-terminal-fg;
 }
 
 html,
@@ -17,47 +18,46 @@ body {
 }
 
 body {
-  @apply font-sans antialiased;
+  @apply font-mono antialiased;
   @apply flex flex-col;
-  /* Gruvbox light: bg0 (cream) */
-  @apply bg-gruvbox-bg0-light;
-  /* Gruvbox light: fg0 with opacity */
-  @apply text-gruvbox-fg1-light/60;
+  @apply bg-terminal-bg text-terminal-fg;
 }
 
 header {
-  @apply fixed top-0 left-0 right-0 z-50 py-5;
-  /* Gruvbox backgrounds solid */
-  @apply bg-gruvbox-bg0-light;
-  @apply border-b-4 border-black;
+  @apply py-5 border-b border-terminal-border;
 }
 
 main {
-  @apply flex-1 py-32;
+  @apply flex-1 py-12;
 }
 
 footer {
-  @apply py-5 text-sm;
+  @apply py-5 text-sm text-terminal-muted;
 }
 
 article {
   @apply max-w-full prose prose-img:mx-auto prose-img:my-auto;
-  @apply prose-headings:font-semibold prose-headings:text-2xl prose-p:font-serif;
-  /* Headings: black */
-  @apply prose-headings:text-black;
+  @apply prose-invert;
+  @apply prose-headings:font-semibold prose-headings:text-2xl prose-p:font-mono;
+  @apply prose-headings:text-terminal-fg prose-p:text-terminal-fg;
+  @apply prose-strong:text-terminal-fg prose-code:text-terminal-accent;
+  @apply prose-pre:border prose-pre:border-terminal-border prose-pre:bg-terminal-panel;
+  @apply prose-blockquote:border-terminal-accent prose-blockquote:text-terminal-muted;
 }
 
 @layer utilities {
   article a {
-    @apply font-sans underline underline-offset-2;
-    /* Black underline and text */
-    @apply decoration-black text-black;
+    @apply font-mono underline underline-offset-2;
+    @apply decoration-terminal-accent text-terminal-accent;
   }
 
   article a:hover {
-    /* Keep hover for emphasis */
-    @apply decoration-black text-black;
+    @apply decoration-terminal-accent text-terminal-fg;
   }
+}
+
+::selection {
+  @apply bg-terminal-accent/35 text-terminal-fg;
 }
 
 

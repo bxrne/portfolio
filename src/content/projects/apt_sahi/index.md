@@ -2,7 +2,6 @@
 title: "APT_SAHI"
 description: "Framework agnostic sliced/tiled inference + interactive ui + error analysis plots adjusted for roc_tracking_cnn"
 date: "Mar 18 2022"
-demoURL:  "https://github.com/provizio/apt_sahi"
 repoURL: "https://github.com/provizio/apt_sahi"
 ---
 

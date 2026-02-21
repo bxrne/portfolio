@@ -11,14 +11,14 @@ import Checkbox from "@components/Checkbox.astro";
       name="spro_email"
       id="spro_email"
       placeholder="email@newsletter.com"
-      class="flex-1 px-4 py-2 border-2 border-black text-black bg-transparent focus:outline-none focus:ring-0 text-md placeholder:text-gray-500"
+      class="flex-1 px-4 py-2 border border-terminal-border text-terminal-fg bg-terminal-bg/60 focus:outline-none focus:ring-0 text-md placeholder:text-terminal-muted"
       required
     >
     <button
       type="button"
       id="Spro-Btn-Signup-StyleNo"
       onclick="event.preventDefault(); if(window.SensorProForms) { SensorProForms.initialize('RegForm','https://e.sensorpro.net/Run/Subscribe.aspx?fid=qzuo78qt%2FWe0h72YktFkNhkbYlylUGhWl1g%2BQov7mo2ZS5WO5UkSig%3D%3D_stzh',''); SensorProForms.submitForm(false); } else { this.form.submit(); }"
-      class="px-4 py-2 border-2 border-black text-black bg-transparent hover:bg-black/5 focus:outline-none focus:ring-0 text-md font-medium whitespace-nowrap transition-colors"
+      class="px-4 py-2 border border-terminal-accent text-terminal-accent bg-terminal-accent-soft/40 hover:bg-terminal-accent-soft focus:outline-none focus:ring-0 text-md font-medium whitespace-nowrap transition-colors"
     >
      Subscribe 
     </button>
@@ -28,22 +28,20 @@ import Checkbox from "@components/Checkbox.astro";
 </form>
 
 <script is:inline>
-// @ts-ignore
 if (!window.SensorProForms) {
-  const script = document.createElement('script');
-  script.src = 'https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.js';
+  const script = document.createElement("script");
+  script.src = "https://e.sensorpro.net/ScriptCache/SensorPro_RegForm.js";
   script.onload = () => {
-    console.log('SensorPro script loaded');
+    console.log("SensorPro script loaded");
     // Override SensorPro submit to use native form submission
     if (window.SensorProForms) {
-      const originalSubmit = window.SensorProForms.submitForm;
       window.SensorProForms.submitForm = function(cookie) {
         if (window.SensorProForms.validateForm()) {
           if (cookie) {
-            window.SensorProForms.dropSignupCookie('sproSignupModal', 'signup', 0);
+            window.SensorProForms.dropSignupCookie("sproSignupModal", "signup", 0);
           }
           // Use native form submission instead of document.form.submit()
-          const form = document.getElementById('sensorProForm');
+          const form = document.getElementById("sensorProForm");
           if (form && form instanceof HTMLFormElement) {
             form.submit();
           }
@@ -52,27 +50,8 @@ if (!window.SensorProForms) {
     }
   };
   script.onerror = () => {
-    console.error('Failed to load SensorPro script');
+    console.error("Failed to load SensorPro script");
   };
   document.head.appendChild(script);
 }
 </script>
-
-<style>
-  form {
-    position: relative;
-  }
-  form::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgb(251, 241, 199);
-    transform: translate(2px, 2px);
-    z-index: -1;
-  }
-
-
-</style>

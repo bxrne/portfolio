@@ -2,10 +2,8 @@
 title: "Clouseau"
 description: "Inspector Clouseau Document Search Engine on Project Gutenberg directory"
 date: "Oct 22 2024"
-demoURL: "https://github.com/Darragh-Grealish/clouseau"
 repoURL: "https://github.com/Darragh-Grealish/clouseau"
 ---
-
 
 Document repository search engine written in C++.
 Using CMake, ctest, C++17 and Project Gutenberg.
@@ -14,7 +12,7 @@ Using CMake, ctest, C++17 and Project Gutenberg.
 
 Using the Project Gutenberg library you can use `download_gutenberg.py` to download (web scrape) the top 100 books from Project Gutenberg and store them in a subdirectory of the project root `archive` as plain text files.
 
-## Description 
+## Description
 
 We needed a text source that was copyright and piracy-free, so we decided to use the Project Gutenberg library. The library contains a vast collection of books that are in the public domain. We implemented a 'download_gutenberg.py' script, located at the project root, that automates the retrieval of the top 100 books from Project Gutenberg. The script is compatible with pip for easy environment setup using the requirements.txt file. The downloaded books are stored in the `archive` subdirectory as plain text files, making them accessible for indexing.
 
@@ -35,31 +33,31 @@ We incorporated the GoogleTest framework for streamlined and efficient managemen
 
 - File Reading (file_word_count): O(N) per file (N = characters in the file).
 
-- Indexing Directory (index_directory): O(F * N) overall (F = number of files), with concurrency reducing runtime based on available threads.
+- Indexing Directory (index_directory): O(F \* N) overall (F = number of files), with concurrency reducing runtime based on available threads.
 
-- Frequency Calculation: Insertion into the index is O(M) per unique word, leading to O(F * M) for all files.
+- Frequency Calculation: Insertion into the index is O(M) per unique word, leading to O(F \* M) for all files.
 
 2. Search Functionality:
 
-- Processing queries has a complexity of O(T * L) (T = number of tokens, L = token length).
+- Processing queries has a complexity of O(T \* L) (T = number of tokens, L = token length).
 
-- The indexing phase runs at O(F * N), while search operations are approximately O(T * L). 
+- The indexing phase runs at O(F _ N), while search operations are approximately O(T _ L).
 
 3. AutoComplete Functionality:
 
-- Deserializing & Inserting into Trie O(W * L) (W = Number of words, L = Length of the word).
+- Deserializing & Inserting into Trie O(W \* L) (W = Number of words, L = Length of the word).
 
-- Searching the prefix O(L * N) per prefix (L = length of prefix, N = number of nodes in subtree).
+- Searching the prefix O(L \* N) per prefix (L = length of prefix, N = number of nodes in subtree).
 
 4. Trie:
 
 - Insert Operation: O(L) per word (L = length of the word).
 
-- Search Operation: O(L * N * 1) per prefix (L = length of prefix, N = number of nodes in subtree 1 = (amortized) HashMap look up of nodes).
+- Search Operation: O(L _ N _ 1) per prefix (L = length of prefix, N = number of nodes in subtree 1 = (amortized) HashMap look up of nodes).
 
 5. ArrayList: Using dynamic allocation, the ArrayList has a complexity of O(1) for insertion and deletion, and O(N) for resizing (doubles). Inserts are worst case O(N) when resizing but amortized O(1) overall. Copy move and assignment operations are O(N).
 
-6. Set: 
+6. Set:
 
 - Insert Operation: O(N) (N = number of elements in the set).
 
@@ -67,7 +65,7 @@ We incorporated the GoogleTest framework for streamlined and efficient managemen
 
 - Erase Operation: O(N) (N = number of elements in the set).
 
-- Intersect Operation: O(N * M) (N = number of elements in the current set, M = number of elements in the other set).
+- Intersect Operation: O(N \* M) (N = number of elements in the current set, M = number of elements in the other set).
 
 - Resize Operation: O(N) (N = number of elements in the set).
 
@@ -76,7 +74,7 @@ We incorporated the GoogleTest framework for streamlined and efficient managemen
 Used bucket chaining for collision resolution, with lazy deletion and rehashing when the load factor exceeds 0.7.
 Used [djb2](http://www.cse.yorku.ca/~oz/hash.html) for the primary hash function.
 
-- Insert Operation: O(1) (average case), O(N) (worst case)  - Quadratic Probing
+- Insert Operation: O(1) (average case), O(N) (worst case) - Quadratic Probing
 
 - Search Operation: O(1) (average case), O(N) (worst case) - Quadratic Probing
 
@@ -85,5 +83,3 @@ Used [djb2](http://www.cse.yorku.ca/~oz/hash.html) for the primary hash function
 - Resize Operation: O(N) (N = number of elements in the map).
 
 - Rehash Operation: O(N) (N = number of elements in the map).
-
-

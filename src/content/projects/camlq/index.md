@@ -2,10 +2,8 @@
 title: "JSON via the camel, towards RFC 8259"
 description: "Parsing and querying JSON with OCaml"
 date: "Oct 25 2025"
-demoURL:  "https://github.com/bxrne/camlq"
 repoURL: "https://github.com/bxrne/camlq"
 ---
-
 
 A jq-inspired JSON parser and query tool built in pure OCaml. No external dependencies, just functional programming and stdin.
 
@@ -32,6 +30,7 @@ cat data.json | camlq .courses[]
 ## Implementation notes
 
 The parser is built from scratch - no external JSON libraries. It handles:
+
 - Object and array nesting
 - Type handling (strings, numbers, booleans, null)
 - Error recovery with clear messages
@@ -42,12 +41,14 @@ Query evaluation uses pattern matching to traverse the parsed AST. The syntax is
 ## Trade-offs
 
 **Pros:**
+
 - Zero dependencies for JSON parsing
 - Clean functional implementation
 - Easy integration via pipes
 - OCaml's type safety catches edge cases at compile time
 
 **Cons:**
+
 - Not yet benchmarked against RFC 8259
 - Needs fuzzing for production use
 - Query syntax is simplified compared to jq
@@ -114,6 +115,7 @@ The accumulator pattern: build the list in reverse (`value :: acc`), then revers
 ### Parser structure
 
 Parsing follows a recursive descent pattern. Each JSON type has a dedicated function:
+
 - `parse_value` - entry point, dispatches based on first character
 - `parse_object` - handles `{...}` with key-value pairs
 - `parse_array` - handles `[...]` with comma-separated values
@@ -143,7 +145,7 @@ The query engine is a separate pass over the parsed AST. It uses pattern matchin
 let rec eval_query query json =
   match query with
   | Identity -> json
-  | Property key -> 
+  | Property key ->
       (match json with
        | Object pairs -> List.assoc key pairs
        | _ -> raise NotFound)
@@ -177,6 +179,7 @@ String concatenation in OCaml allocates new strings. The parser uses Buffer for 
 ## Module structure
 
 The codebase separates concerns:
+
 - `Lexer` - character-level tokenization
 - `Parser` - token-to-AST conversion
 - `Query` - query parsing and evaluation
@@ -188,6 +191,7 @@ Each module exposes a minimal interface. The parser doesn't know about queries. 
 ## Next steps
 
 The TODO list includes:
+
 - RFC 8259 compliance testing
 - Fuzz testing for edge cases
 - Performance benchmarks
@@ -209,4 +213,3 @@ Built with OCaml 5.0+ and the Dune build system. Licensed under MIT.
 ---
 
 [GitHub Repository](https://github.com/bxrne/camlq)
-

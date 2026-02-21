@@ -4,7 +4,6 @@ import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
-import Newsletter from "@components/Newsletter.astro";
 import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
 
@@ -37,7 +36,7 @@ const work = await Promise.all(
       <section>
         <article class="space-y-4">
           <p class="animate">
-          Interested in software and distributed systems. I’ve worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I’ve led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry. Mainly Go, Typescript, Python, Bash, C, C++, and Lua, via Kubernetes, Helm, Linux, and Terraform. I’m currently learning OCaml...
+          Interested in software and distributed systems. I’ve worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I’ve led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry.
           </p>
            </article>
       </section>
@@ -46,7 +45,7 @@ const work = await Promise.all(
 
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
+          <h5 class="font-semibold text-terminal-accent">
             Recent projects
           </h5>
           <Link href="/projects">
@@ -63,7 +62,7 @@ const work = await Promise.all(
       </section>
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
+          <h5 class="font-semibold text-terminal-accent">
             Latest posts
           </h5>
           <Link href="/blog">
@@ -80,7 +79,7 @@ const work = await Promise.all(
       </section>
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black">
+          <h5 class="font-semibold text-terminal-accent">
             Work Experience
           </h5>
           <Link href="/work">
@@ -93,7 +92,7 @@ const work = await Promise.all(
               <div class="text-sm opacity-75">
                 {dateRange(entry.data.dateStart, entry.data.dateEnd)}
               </div>
-              <div class="font-semibold text-black">
+              <div class="font-semibold text-terminal-fg">
                 {entry.data.company}
               </div>
               <div class="text-sm opacity-75">
@@ -107,7 +106,7 @@ const work = await Promise.all(
         </ul>
       </section>
       <section class="animate space-y-4">
-        <h5 class="font-semibold text-black">
+        <h5 class="font-semibold text-terminal-accent">
           Let's Connect
         </h5>
         <article>

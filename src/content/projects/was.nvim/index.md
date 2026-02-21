@@ -2,7 +2,6 @@
 title: "was.nvim"
 description: "Neovim plugin to solve 'What was I doing here' when moving between dirs"
 date: "Jan 15 2025"
-demoURL: "https://github.com/bxrne/was.nvim"
 repoURL: "https://github.com/bxrne/was.nvim"
 ---
 
@@ -57,6 +56,7 @@ use {
 ## Configuration
 
 In your Lazy or Packer configuration, you can pass an optional `opts` table to `require('was').setup()`:
+
 ```lua
 {
   -- "bxrne/was.nvim",
@@ -73,16 +73,19 @@ In your Lazy or Packer configuration, you can pass an optional `opts` table to `
 ## Usage
 
 Store your current intention:
+
 ```vim
 :Was Implementing user authentication system
 ```
 
 View your last stored intention:
+
 ```vim
 :Was
 ```
 
 The plugin automatically detects your workspace based on:
+
 1. Git root directory (if in a Git repository)
 2. Current working directory (if not in a Git repository)
 
@@ -93,4 +96,3 @@ Intentions are stored persistently in `~/.local/share/nvim/was/intentions.json`.
 ```bash
 nvim --headless -c "PlenaryBustedDirectory tests/ { minimal_init = './tests/minimal_init.lua' }"
 ```
-

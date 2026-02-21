@@ -2,10 +2,8 @@
 title: "BUCOL"
 description: "Write a parser and accompanying lexical analysis tool for a syntactically limited language (BUCOL) "
 date: "May 10 2024"
-demoURL: "https://github.com/bxrne/BUCOL"
 repoURL: "https://github.com/bxrne/BUCOL"
 ---
-
 
 ## Objective
 
@@ -41,7 +39,6 @@ cd BUCOL
   - Output is of the form `PRINT "text to be printed"; <identifier>.`
 
 **Note**: The language is case-insensitive and whitespace is ignored.
-
 
 ## Project structure
 
