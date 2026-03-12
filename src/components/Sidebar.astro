@@ -1,0 +1,59 @@
+---
+import { SITE, SOCIALS } from "@consts";
+
+const pathname = Astro.url.pathname;
+
+const links = [
+  { href: "/", label: "About" },
+  { href: "/blog", label: "Writing" },
+  { href: "/work", label: "Work" },
+  { href: "/projects", label: "Projects" },
+  { href: "/reading-list", label: "Reading" },
+];
+
+function isActive(href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+}
+---
+
+<aside class="md:w-48 lg:w-56 shrink-0 pt-6 md:pt-16 pb-4 md:pb-0">
+  <div class="md:sticky md:top-16">
+    <a href="/" class="block mb-8">
+      <h1 class="font-serif text-xl font-bold text-paper-fg tracking-tight">
+        {SITE.NAME}
+      </h1>
+    </a>
+    <nav class="flex flex-row flex-wrap gap-x-4 gap-y-1 md:flex-col md:gap-x-0 md:gap-y-0 md:space-y-1 text-sm font-medium">
+      {links.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={[
+            "py-0.5 transition-colors",
+            isActive(href)
+              ? "text-paper-fg font-medium"
+              : "text-paper-muted hover:text-paper-fg",
+          ]}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+    <div class="hidden md:block mt-8 pt-6 border-t border-paper-border">
+      <ul class="space-y-1 text-sm text-paper-muted">
+        {SOCIALS.map((social) => (
+          <li>
+            <a href={social.HREF} target="_blank" class="hover:text-paper-fg transition-colors">
+              {social.NAME}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href={`mailto:${SITE.EMAIL}`} class="hover:text-paper-fg transition-colors">
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>

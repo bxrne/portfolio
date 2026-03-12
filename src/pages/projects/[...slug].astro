@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
 import FormattedDate from "@components/FormattedDate.astro";
 import { readingTime } from "@lib/utils";
 import BackToPrev from "@components/BackToPrev.astro";
@@ -23,45 +22,35 @@ const { Content } = await project.render();
 ---
 
 <PageLayout title={project.data.title} description={project.data.description}>
-  <Container>
-    <div class="animate">
-      <BackToPrev href="/projects">
-        Back to projects
-      </BackToPrev>
-    </div>
-    <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={project.data.date} />
-        </div>
-        &bull;
-        <div class="font-base text-sm">
-          {readingTime(project.body)}
-        </div>
+  <div class="pt-8 md:pt-16">
+    <BackToPrev href="/projects">
+      Back to projects
+    </BackToPrev>
+    <div class="mt-8 mb-10">
+      <div class="flex items-center gap-2 text-sm text-paper-muted">
+        <FormattedDate date={project.data.date} />
+        <span>·</span>
+        <span>{readingTime(project.body)}</span>
       </div>
-      <div class="animate text-2xl font-semibold text-terminal-fg">
+      <h1 class="font-serif text-2xl font-bold mt-2 text-paper-fg">
         {project.data.title}
-      </div>
+      </h1>
       {(project.data.demoURL || project.data.repoURL) && (
-        <nav class="animate flex gap-1">
+        <nav class="flex gap-2 mt-2 text-sm">
           {project.data.demoURL && (
-            <Link href={project.data.demoURL} external>
-              demo
-            </Link>
+            <Link href={project.data.demoURL} external>demo</Link>
           )}
           {project.data.demoURL && project.data.repoURL && (
-            <span>/</span>
+            <span class="text-paper-muted">·</span>
           )}
           {project.data.repoURL && (
-            <Link href={project.data.repoURL} external>
-              repo
-            </Link>
+            <Link href={project.data.repoURL} external>repo</Link>
           )}
         </nav>
       )}
     </div>
-    <article class="animate">
+    <article>
       <Content />
     </article>
-  </Container>
+  </div>
 </PageLayout>

@@ -2,14 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  border-radius: 0 !important;
-}
-
 html {
   overflow-y: scroll;
-  color-scheme: dark;
-  @apply bg-terminal-bg text-terminal-fg;
+  color-scheme: light;
+  @apply bg-paper-bg text-paper-fg;
 }
 
 html,
@@ -18,13 +14,17 @@ body {
 }
 
 body {
-  @apply font-mono antialiased;
+  @apply antialiased;
   @apply flex flex-col;
-  @apply bg-terminal-bg text-terminal-fg;
+  @apply bg-paper-bg text-paper-fg;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  line-height: 1.7;
+  font-size: 16px;
 }
 
 header {
-  @apply py-5 border-b border-terminal-border;
+  @apply py-5;
 }
 
 main {
@@ -32,35 +32,33 @@ main {
 }
 
 footer {
-  @apply py-5 text-sm text-terminal-muted;
+  @apply py-5 text-sm text-paper-muted;
 }
 
 article {
-  @apply max-w-full prose prose-img:mx-auto prose-img:my-auto;
-  @apply prose-invert;
-  @apply prose-headings:font-semibold prose-headings:text-2xl prose-p:font-mono;
-  @apply prose-headings:text-terminal-fg prose-p:text-terminal-fg;
-  @apply prose-strong:text-terminal-fg prose-code:text-terminal-accent;
-  @apply prose-pre:border prose-pre:border-terminal-border prose-pre:bg-terminal-panel;
-  @apply prose-blockquote:border-terminal-accent prose-blockquote:text-terminal-muted;
+  @apply max-w-full prose prose-base md:prose-lg;
+  @apply prose-headings:font-serif prose-headings:font-bold prose-headings:text-paper-fg;
+  @apply prose-p:text-paper-fg prose-p:font-medium;
+  @apply prose-strong:text-paper-fg prose-strong:font-bold prose-code:text-paper-fg;
+  @apply prose-pre:border prose-pre:border-paper-border prose-pre:bg-gray-50;
+  @apply prose-blockquote:border-paper-muted prose-blockquote:text-paper-muted;
+  @apply prose-code:font-mono prose-pre:font-mono;
 }
 
 @layer utilities {
   article a {
-    @apply font-mono underline underline-offset-2;
-    @apply decoration-terminal-accent text-terminal-accent;
+    @apply underline underline-offset-2;
+    @apply decoration-current text-paper-fg;
   }
 
   article a:hover {
-    @apply decoration-terminal-accent text-terminal-fg;
+    @apply decoration-current text-paper-muted;
   }
 }
 
 ::selection {
-  @apply bg-terminal-accent/35 text-terminal-fg;
+  @apply bg-paper-fg/15 text-paper-fg;
 }
-
-
 
 html #back-to-top {
   @apply pointer-events-none;

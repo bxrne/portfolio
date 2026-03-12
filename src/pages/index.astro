@@ -1,142 +1,57 @@
 ---
-import { getCollection } from "astro:content";
-import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
-import { dateRange } from "@lib/utils";
-import { SITE, HOME, SOCIALS } from "@consts";
-
-const blog = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0,SITE.NUM_POSTS_ON_HOMEPAGE);
-
-const projects = (await getCollection("projects"))
-  .filter(project => !project.data.draft)
-  .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf())
-  .slice(0,SITE.NUM_PROJECTS_ON_HOMEPAGE);
-
-const allwork = (await getCollection("work"))
-  .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf())
-  .slice(0,SITE.NUM_WORKS_ON_HOMEPAGE);
-
-const work = await Promise.all(
-  allwork.map(async (item) => {
-    const { Content } = await item.render();
-    return { ...item, Content };
-  })
-);
+import { getCollection } from "astro:content";
+import { HOME, SITE } from "@consts";
 
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <Container>
-    <div class="space-y-16">
-      <section>
-        <article class="space-y-4">
-          <p class="animate">
-          Interested in software and distributed systems. I’ve worked in MedTech developing MES integrations and observability tooling for factory automation, built AI analysis platforms for investment fund software, and worked on radar vision ML in ADAS projects. In robotics, I developed teleoperation tools and simulation environments for industrial arms and created performance benchmarks for computer vision models. I’ve led payloads for competition rockets, including deployable CanSats running edge AI and real-time telemetry.
-          </p>
-           </article>
-      </section>
+  <div class="pt-8 md:pt-16">
+    <section class="flex flex-col sm:flex-row gap-8 items-start">
+      <img
+        src="/headshot.jpg"
+        alt="Adam Byrne"
+        class="w-28 h-28 object-cover grayscale shrink-0"
+      />
+      <div class="space-y-4 leading-relaxed">
+        <p>
+              Interested in software and systems programming. Currently looking at distributed systems and some systems programming. Wrote perception software for car radar systems, worked on factory teleop and simulation, worked on platforms for ai investment research and medtech. Also worked on simulation and payload for high-powered rocketry.
+        </p>
+      </div>
+    </section>
+    <section class="mt-16">
+      <h2 class="font-serif text-lg font-bold mb-1">Background</h2>
+      <p class="text-sm text-paper-muted mb-4">Software Systems</p>
+      <div class="space-y-4 leading-relaxed">
+        <p>
+        Finishing my MSc (+BSc) <a target="_blank" href="https://software-engineering.ie" class="hover:text-paper-fg transition-colors">Immersive Software Engineering with graded industry residencies at Johnson &amp; Johnson, Provizio, Analog Devices, and BJF R&D. My experience spans factory automation, Kubernetes services, radar ML for autonomous driving, and AI analysis platforms.</a>
+        </p>
+        <p>
+        Outside of industry — rocketry payloads with edge AI, simulation and deep learning, teleoperation tools for industrial arms, and various projects in Go, TypeScript, Zig, OCaml, and whatever the problem calls for.
+        </p>
+      </div>
+    </section>
 
+    <section class="mt-16">
+      <h2 class="font-serif text-lg font-bold mb-1">Open Source</h2>
+      <p class="text-sm text-paper-muted mb-4">Early days. Good place to learn new things.</p>
+      <p class="leading-relaxed mb-1">
+      Currently working in the Kubernetes ecosystem, due to curiosity from working with it, for now tidying bugs and getting familiar with how a large project operates. The kind of work where you spend a lot of time reading before you write any Go; in this case.
+      </p>
+      <p class="leading-relaxed">
+      Also in an effort to learn systems programming, I am using Zig working on small linux programs to act as temporal databases and a file and proc isolation tool (to be OCI compatible at least) which runs busybox bin right now in a rootless env.
+    </section>
 
-
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-terminal-accent">
-            Recent projects
-          </h5>
-          <Link href="/projects">
-            See all projects
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {projects.map(project => (
-            <li>
-              <ArrowCard entry={project} />
-            </li>
-          ))}
-        </ul>
-      </section>
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-terminal-accent">
-            Latest posts
-          </h5>
-          <Link href="/blog">
-            See all posts
-          </Link>
-        </div>
-        <ul class="flex flex-col gap-4">
-          {blog.map(post => (
-            <li>
-              <ArrowCard entry={post} />
-            </li>
-          ))}
-        </ul>
-      </section>
-      <section class="animate space-y-6">
-        <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-terminal-accent">
-            Work Experience
-          </h5>
-          <Link href="/work">
-            See all work
-          </Link>
-        </div>
-        <ul class="flex flex-col space-y-4">
-          {work.map(entry => (
-            <li>
-              <div class="text-sm opacity-75">
-                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-              </div>
-              <div class="font-semibold text-terminal-fg">
-                {entry.data.company}
-              </div>
-              <div class="text-sm opacity-75">
-                {entry.data.role}
-              </div>
-              <article>
-                <entry.Content />
-              </article>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <section class="animate space-y-4">
-        <h5 class="font-semibold text-terminal-accent">
-          Let's Connect
-        </h5>
-        <article>
-          <p>
-            If you want to get in touch with me,
-            reach out on social media or send me an email.
-          </p>
-        </article>
-        <ul class="flex flex-wrap gap-2">
-          {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                {SOCIAL.NAME}
-              </Link>
-              {"/"}
-            </li>
-          ))}
-          <li class="line-clamp-1">
-            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
-              {SITE.EMAIL}
-            </Link>
-          </li>
-          <li class="flex gap-x-2 text-nowrap">
-            {"/"}
-            <Link href="/resume.pdf" external aria-label={`${SITE.NAME} CV`}>
-              cv
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </div>
-  </Container>
+    <section class="mt-16">
+      <h2 class="font-serif text-lg font-bold mb-4">Elsewhere</h2>
+      <p class="text-paper-muted leading-relaxed">
+        <Link href="https://github.com/bxrne" external>GitHub</Link> ·
+        <Link href="https://www.linkedin.com/in/bxrne" external>LinkedIn</Link> ·
+        <Link href="https://twitter.com/abxrne" external>Twitter</Link> ·
+        <Link href="https://substack.com/@bxrne" external>Substack</Link> ·
+        <Link href="/resume.pdf" external>CV</Link>
+      </p>
+    </section>
+  </div>
 </PageLayout>

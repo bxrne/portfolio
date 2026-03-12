@@ -5,16 +5,7 @@ type Props = {
 
 const { href } = Astro.props;
 ---
- 
-<a href={href} class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap border border-terminal-border bg-terminal-panel/70 text-terminal-fg hover:border-terminal-accent hover:text-terminal-accent transition-colors">
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24"
-    class="absolute top-1/2 left-2 -translate-y-1/2 size-4 stroke-2 fill-none stroke-current">
-    <line x1="5" y1="12" x2="19" y2="12" class="translate-x-2 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100" />
-    <polyline points="12 5 5 12 12 19" class="translate-x-1 group-hover:translate-x-0" />
-  </svg>
-  <div class="text-sm">
-    <slot/>
-  </div>
+
+<a href={href} class="text-sm text-paper-muted hover:text-paper-fg transition-colors">
+  ← <slot/>
 </a>

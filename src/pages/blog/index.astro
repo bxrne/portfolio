@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { BLOG } from "@consts";
 
@@ -26,34 +25,24 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
 <PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-terminal-accent">
-        Blog
-      </div>
-  <p class="animate">
-  {BLOG.DESCRIPTION} 
-      </p>
-      <div class="space-y-4">
-        {years.map(year => (
-          <section class="animate space-y-4">
-            <div class="font-semibold text-terminal-fg">
-              {year}
-            </div>
-            <div>
-              <ul class="flex flex-col gap-4">
-                {
-                  posts[year].map((post) => (
-                    <li>
-                      <ArrowCard entry={post}/>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          </section>
-        ))}
-      </div>
+  <div class="space-y-10 pt-8 md:pt-16">
+    <div>
+      <h2 class="font-serif text-2xl font-bold mb-2">Writing</h2>
+      <p class="text-paper-muted">{BLOG.DESCRIPTION}</p>
     </div>
-  </Container>
+    <div class="space-y-8">
+      {years.map(year => (
+        <section class="space-y-2">
+          <h3 class="font-serif text-lg font-medium text-paper-muted">
+            {year}
+          </h3>
+          <div>
+            {posts[year].map((post) => (
+              <ArrowCard entry={post} />
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
 </PageLayout>

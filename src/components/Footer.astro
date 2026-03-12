@@ -1,20 +1,24 @@
 ---
-import Container from "@components/Container.astro";
-import { SITE } from "@consts";
+import { SITE, SOCIALS } from "@consts";
 import BackToTop from "@components/BackToTop.astro";
-import Newsletter from "@components/Newsletter.astro";
 ---
 
 <footer>
-  <Container>
-    <div class="flex flex-col md:flex-row md:items-start justify-between w-full gap-4">
-      <Newsletter />
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-16">
+    <div class="text-paper-muted">
+      &copy; {new Date().getFullYear()} {SITE.NAME}
+    </div>
+    <div class="flex items-center gap-4">
+      <ul class="flex gap-3 text-sm text-paper-muted md:hidden">
+        {SOCIALS.map((social) => (
+          <li>
+            <a href={social.HREF} target="_blank" class="hover:text-paper-fg transition-colors">
+              {social.NAME}
+            </a>
+          </li>
+        ))}
+      </ul>
       <BackToTop />
     </div>
-    <div class="text-center pt-4">
-      <div>
-        &copy; 2026 {SITE.NAME}
-      </div>
-    </div>
-  </Container>
+  </div>
 </footer>

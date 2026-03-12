@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import { READING } from "@consts";
 
@@ -11,21 +10,15 @@ const readings = (await getCollection("reading"))
 ---
 
 <PageLayout title={READING.TITLE} description={READING.DESCRIPTION}>
-  <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-terminal-accent">
-        Reading List
-      </div>
-      <p class="animate">
-        {READING.DESCRIPTION}
-      </p>
-      <ul class="animate flex flex-col gap-4">
-        {readings.map((reading) => (
-          <li>
-            <ArrowCard entry={reading}/>
-          </li>
-        ))}
-      </ul>
+  <div class="space-y-10 pt-8 md:pt-16">
+    <div>
+      <h2 class="font-serif text-2xl font-bold mb-2">Reading</h2>
+      <p class="text-paper-muted">{READING.DESCRIPTION}</p>
     </div>
-  </Container>
+    <div>
+      {readings.map((reading) => (
+        <ArrowCard entry={reading} />
+      ))}
+    </div>
+  </div>
 </PageLayout>

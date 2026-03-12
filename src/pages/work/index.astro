@@ -1,11 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Container from "@components/Container.astro";
 import { dateRange } from "@lib/utils";
 import { WORK } from "@consts";
-
 import Link from "@components/Link.astro";
+
 const collection = (await getCollection("work"))
   .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf());
 
@@ -15,44 +14,33 @@ const work = await Promise.all(
     return { ...item, Content };
   })
 );
-
 ---
 
 <PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
-  <Container>
-    <div class="space-y-10">
-      <div class="animate font-semibold text-terminal-accent">
-        Work
-      </div>
-      <p class="animate">
-      {WORK.DESCRIPTION} <Link href="/resume.pdf" external>
-          (open CV)
-        </Link>
+  <div class="space-y-10 pt-8 md:pt-16">
+    <div>
+      <h2 class="font-serif text-2xl font-bold mb-2">Work</h2>
+      <p class="text-paper-muted">
+        {WORK.DESCRIPTION} <Link href="/resume.pdf" external>(CV)</Link>
       </p>
-      <ul class="flex flex-col space-y-4">
-        { 
-          work.map(entry => (
-            <li class="animate">
-              <div class="text-sm opacity-75">
-                {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-              </div>
-              <div class="font-semibold text-terminal-fg">
-                {entry.data.company}
-              </div>
-              <div class="text-sm opacity-75">
-                {entry.data.role}
-              </div>
-              <article>
-                <entry.Content />
-              </article>
-            </li>
-          ))
-        }
-      </ul>
-<!-- 
-      <ul class="animate flex flex-col gap-4">
-
-      </ul> -->
     </div>
-  </Container>
+    <ul class="space-y-8">
+      {work.map(entry => (
+        <li>
+          <div class="text-sm text-paper-muted">
+            {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+          </div>
+          <div class="font-serif font-bold text-paper-fg mt-1">
+            {entry.data.company}
+          </div>
+          <div class="text-sm text-paper-muted">
+            {entry.data.role}
+          </div>
+          <article class="mt-2">
+            <entry.Content />
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
 </PageLayout>

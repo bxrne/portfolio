@@ -1,10 +1,13 @@
 ---
 import "../styles/global.css";
+import "@fontsource/playfair-display/latin-500.css";
+import "@fontsource/playfair-display/latin-500-italic.css";
+import "@fontsource/playfair-display/latin-700.css";
+import "@fontsource/playfair-display/latin-800.css";
 import "@fontsource/geist-mono/latin-400.css";
-import "@fontsource/geist-mono/latin-600.css";
+import playfair500 from "@fontsource/playfair-display/files/playfair-display-latin-500-normal.woff2";
+import playfair700 from "@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2";
 import geistMono400 from "@fontsource/geist-mono/files/geist-mono-latin-400-normal.woff2";
-import geistMono600 from "@fontsource/geist-mono/files/geist-mono-latin-600-normal.woff2";
-
 
 interface Props {
   title: string;
@@ -25,8 +28,9 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
+<link rel="preload" href={playfair500} as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href={playfair700} as="font" type="font/woff2" crossorigin/>
 <link rel="preload" href={geistMono400} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={geistMono600} as="font" type="font/woff2" crossorigin/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -50,8 +54,6 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
-
-
 <script>
   import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
   document.addEventListener("astro:before-swap", (e) =>
@@ -64,13 +66,7 @@ const { title, description, image = "/nano.png" } = Astro.props;
 </script>
 
 <script is:inline>
-  function enforceDarkTheme() {
-    document.documentElement.classList.add("dark");
-    localStorage.setItem("theme", "dark");
-  }
-
   function init() {
-    enforceDarkTheme();
     onScroll();
 
     const backToTop = document.getElementById("back-to-top");
@@ -81,8 +77,6 @@ const { title, description, image = "/nano.png" } = Astro.props;
 
     document.addEventListener("scroll", onScroll);
   }
-
-
 
   function onScroll() {
     if (window.scrollY > 0) {
@@ -102,5 +96,4 @@ const { title, description, image = "/nano.png" } = Astro.props;
 
   document.addEventListener("DOMContentLoaded", () => init());
   document.addEventListener("astro:after-swap", () => init());
-  enforceDarkTheme();
 </script>
