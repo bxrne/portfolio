@@ -17,8 +17,8 @@ body {
   @apply antialiased;
   @apply flex flex-col;
   @apply bg-paper-bg text-paper-fg;
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-  font-weight: 500;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-weight: 400;
   line-height: 1.7;
   font-size: 16px;
 }
@@ -38,7 +38,7 @@ footer {
 article {
   @apply max-w-full prose prose-base md:prose-lg;
   @apply prose-headings:font-serif prose-headings:font-bold prose-headings:text-paper-fg;
-  @apply prose-p:text-paper-fg prose-p:font-medium;
+  @apply prose-p:text-paper-fg prose-p:font-sans prose-p:font-normal;
   @apply prose-strong:text-paper-fg prose-strong:font-bold prose-code:text-paper-fg;
   @apply prose-pre:border prose-pre:border-paper-border prose-pre:bg-gray-50;
   @apply prose-blockquote:border-paper-muted prose-blockquote:text-paper-muted;

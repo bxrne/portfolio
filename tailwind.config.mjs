@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["Inter", ...defaultTheme.fontFamily.sans],
         serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
         mono: ["Geist Mono", "JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
