@@ -2,7 +2,7 @@
 
 ## Project Purpose
 
-Personal portfolio website showcasing work placements, blog posts, projects, and reading list. All content is authored in Markdown and served statically via Astro.
+Personal portfolio website showcasing work placements, blog posts, and reading list. All content is authored in Markdown and served statically via Astro.
 
 ## Tech Stack
 
@@ -32,7 +32,7 @@ Personal portfolio website showcasing work placements, blog posts, projects, and
 ### MDX Content
 - **Supported Formats**: `.md` (Markdown) and `.mdx` (JSX in Markdown)
 - Processed via `@astrojs/mdx` integration
-- Content organized in collections: `blog`, `work`, `projects`, `reading`
+- Content organized in collections: `blog`, `work`, `reading`
 
 ## Code Style
 
@@ -78,10 +78,6 @@ Personal portfolio website showcasing work placements, blog posts, projects, and
 - **Path**: `src/content/work/`
 - **Schema**: `company` (string), `role` (string), `dateStart` (date), `dateEnd` (date | string)
 
-### Projects Collection
-- **Path**: `src/content/projects/`
-- **Schema**: `title` (string), `description` (string), `date` (date), `draft` (boolean, optional), `demoURL` (string, optional), `repoURL` (string, optional)
-
 ### Reading Collection
 - **Path**: `src/content/reading/`
 - **Schema**: `title` (string), `author` (string), `date` (date), `url` (string), `tags` (array, optional), `draft` (boolean, optional)
@@ -114,13 +110,12 @@ Personal portfolio website showcasing work placements, blog posts, projects, and
 ```
 .
 ├── src/
-│   ├── pages/                 # Route pages (index.astro, blog/, projects/, work/, etc.)
+│   ├── pages/                 # Route pages (index.astro, blog/, work/, etc.)
 │   ├── layouts/               # Reusable page layouts (PageLayout.astro)
 │   ├── components/            # Reusable .astro components
 │   ├── content/               # Markdown/MDX collections
 │   │   ├── blog/              # Blog posts
 │   │   ├── work/              # Work experience
-│   │   ├── projects/          # Project showcases
 │   │   ├── reading/           # Reading list
 │   │   └── config.ts          # Collection schema definitions
 │   ├── lib/                   # Utility functions (utils.ts)
@@ -148,7 +143,7 @@ Personal portfolio website showcasing work placements, blog posts, projects, and
 
 ## Notes for Contributors
 
-1. Keep content in appropriate collections (blog/, work/, projects/, reading/)
+1. Keep content in appropriate collections (blog/, work/, reading/)
 2. Use `draft: true` to exclude content from production builds
 3. Run `npm run lint:fix` before committing to maintain code style
 4. Run `npm run build` to verify type safety and build integrity

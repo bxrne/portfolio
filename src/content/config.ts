@@ -20,18 +20,6 @@ const work = defineCollection({
   }),
 });
 
-const projects = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    draft: z.boolean().optional(),
-    demoURL: z.string().optional(),
-    repoURL: z.string().optional()
-  }),
-});
-
 const reading = defineCollection({
   type: "content",
   schema: z.object({
@@ -44,4 +32,4 @@ const reading = defineCollection({
   }),
 });
 
-export const collections = { blog, work, projects, reading };
+export const collections = { blog, work, reading };
