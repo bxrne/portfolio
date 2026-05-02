@@ -1,5 +1,5 @@
 ---
-title: "8 bit character encoding"
+title: "EBCDIC: 8 bit character encoding"
 description: "IBM's encoding for data on mainframes"
 date: "Nov 12 2025"
 demoURL:  "#"
