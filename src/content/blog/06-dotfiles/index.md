@@ -1,5 +1,5 @@
 ---
-title: "dev setup (arch)"
+title: "Arch Linux on a MacBook Pro, dotfiles for dev"
 description: "Mac is now Arch..."
 date: "Oct 1 2025"
 demoURL:  "https://github.com/bxrne/dotfiles/tree/master"

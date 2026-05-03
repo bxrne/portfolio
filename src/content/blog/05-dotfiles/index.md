@@ -1,5 +1,5 @@
 ---
-title: "dev setup"
+title: "Dotfiles for a Mac: Hammerspoon, Ghostty, Z-Shell, Neovim and Zellij"
 description: "My collective configuration for dev on a Mac"
 date: "Aug 3 2025"
 demoURL:  "https://github.com/bxrne/dotfiles/tree/main"
