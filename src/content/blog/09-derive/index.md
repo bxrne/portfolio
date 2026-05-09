@@ -1,5 +1,5 @@
 ---
-title: "derive: an embeddable RDF quad store in Zig"
+title: "Derive: an embeddable RDF quad store in Zig"
 description: "Six permutation indexes, string interning, and a CRC-framed WAL"
 date: "Apr 17 2026"
 demoURL: "#"

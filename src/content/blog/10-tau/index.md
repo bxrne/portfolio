@@ -1,5 +1,5 @@
 ---
-title: "tau: data as typed functions of time"
+title: "Tau: data as typed functions of time"
 description: "Why I designed tau's data model around partial functions and an actor-per-series runtime"
 date: "Feb 21 2026"
 demoURL: "#"

@@ -1,5 +1,5 @@
 ---
-title: "launchrail: a 6DOF rocket simulator with a Black-Scholes turbulence plugin"
+title: "Launchrail: a 6DOF rocket simulator with a Black-Scholes turbulence plugin"
 description: "OpenRocket files in, RK4 integration, ECS systems, and a quant-finance idea borrowed for atmospheric noise"
 date: "May 14 2025"
 demoURL: "#"

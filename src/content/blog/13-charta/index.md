@@ -1,5 +1,5 @@
 ---
-title: "charta: state charts as the next IR for code-generating agents"
+title: "Charta: state charts as the next IR for code-generating agents"
 description: "From LLMs that write code, to agents that run tools, to formally verified state charts you can codegen from"
 date: "Apr 27 2026"
 demoURL: "#"

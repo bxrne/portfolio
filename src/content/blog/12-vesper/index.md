@@ -1,5 +1,5 @@
 ---
-title: "vesper: a RISC-V64 kernel in Rust, no_std, no crates"
+title: "Vesper: a RISC-V64 kernel in Rust, no_std, no crates"
 description: "Building an OS from M-mode boot up to ELF parsing on QEMU virt, following Stephen Marz's OsBlog"
 date: "Apr 30 2026"
 demoURL: "#"
