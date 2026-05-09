@@ -21,7 +21,7 @@ const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         <li class={heading.depth === 3 ? "pl-4" : ""}>
           <a
             href={`#${heading.slug}`}
-            class="text-paper-fg hover:text-paper-muted underline-offset-2 hover:underline"
+            class="text-paper-fg underline-offset-2"
           >
             {heading.text}
           </a>

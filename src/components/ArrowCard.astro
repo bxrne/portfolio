@@ -9,9 +9,9 @@ type Props = {
 const { entry } = Astro.props;
 ---
 
-<a href={entry.collection === "reading" ? entry.data.url : `/${entry.collection}/${entry.slug}`} class="group block py-2.5">
+<a href={entry.collection === "reading" ? entry.data.url : `/${entry.collection}/${entry.slug}`} class="block py-2.5">
   <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-    <div class="text-paper-fg group-hover:text-paper-muted transition-colors">
+    <div class="text-paper-fg">
       {entry.data.title}
     </div>
     <div class="text-sm text-paper-muted shrink-0">

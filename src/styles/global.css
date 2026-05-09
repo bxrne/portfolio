@@ -51,9 +51,6 @@ article {
     @apply decoration-current text-paper-fg;
   }
 
-  article a:hover {
-    @apply decoration-current text-paper-muted;
-  }
 }
 
 ::selection {

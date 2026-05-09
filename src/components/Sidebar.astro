@@ -28,10 +28,10 @@ function isActive(href: string) {
         <a
           href={href}
           class:list={[
-            "py-0.5 transition-colors",
+            "py-0.5",
             isActive(href)
               ? "text-paper-fg font-medium"
-              : "text-paper-muted hover:text-paper-fg",
+              : "text-paper-muted",
           ]}
         >
           {label}
@@ -42,13 +42,13 @@ function isActive(href: string) {
       <ul class="space-y-1 text-sm text-paper-muted">
         {SOCIALS.map((social) => (
           <li>
-            <a href={social.HREF} target="_blank" class="hover:text-paper-fg transition-colors">
+            <a href={social.HREF} target="_blank">
               {social.NAME}
             </a>
           </li>
         ))}
         <li>
-          <a href={`mailto:${SITE.EMAIL}`} class="hover:text-paper-fg transition-colors">
+          <a href={`mailto:${SITE.EMAIL}`}>
             Email
           </a>
         </li>
