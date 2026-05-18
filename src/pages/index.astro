@@ -1,74 +1,106 @@
 ---
 import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
-import { getCollection } from "astro:content";
 import { HOME, SITE } from "@consts";
-
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <div class="pt-8 md:pt-16">
-    <section class="flex flex-col sm:flex-row gap-8 items-start">
+  <div class="pt-8 md:pt-20 max-w-2xl">
+
+    <section class="flex flex-col sm:flex-row gap-10 items-start mb-20">
       <img
         src="/headshot.jpg"
         alt="Adam Byrne"
-        class="w-28 h-28 object-cover grayscale shrink-0"
+        class="w-24 h-24 object-cover grayscale shrink-0"
       />
-      <div class="space-y-4 leading-relaxed">
+      <div class="space-y-3 leading-relaxed">
         <p>
-	  Hi, I'm Adam, I write code for fun and for profit.I am particularly interested in the performance and distributed problem space. I write about my projects and the things I find interesting in the world of software on <Link href="/blog">my blog</Link>.
+          Hi, I'm Adam. I write systems software: databases, kernels, simulators.
+          I studied through <a target="_blank" href="https://software-engineering.ie">ISE (MSc)</a>, a residency-based programme where half the degree is spent in industry.
+          My placements covered factory automation and teleoperation, ADAS radar ML, and AI investment research.
+          Alongside that I worked on simulation and payload software for high-powered competition rockets.
         </p>
-      </div>
-    </section>
-    <section class="mt-16">
-      <h2 class="font-serif text-lg font-bold mb-1">Background</h2>
-      <p class="text-sm text-paper-muted mb-4">Software Systems</p>
-      <div class="space-y-4 leading-relaxed">
-      <p>
-	Self-taught since childhood (Meteor, JQuery and Angular 1 days), then formally as part of <a target="_blank" href="https://software-engineering.ie">ISE (MSc)</a> which is a new method of teaching software engineering through graded industry residencies (half of time spent in college). I worked on factory automation and teleoperation, ADAS Radar ML and AI Investment research software during my residencies. In my free time I worked on competition rockets and their simulations and payloads.
-      </p>
         <p>
-
-Comfortable with Kubernetes, Linux and the usual Cloud platform suspects.
-Go and Python were my first (real job) languages, have since picked up Zig, OCaml and Rust for systems projects and for correctness.
-I used to do web dev freelance so I am proficient with the React + &lt;todays popular metaframework&gt; stack.
-
+          I write about projects and ideas on <Link href="/blog">my blog</Link>.
         </p>
       </div>
     </section>
 
-    <section class="mt-16">
-      <h2 class="font-serif text-lg font-bold mb-1">Open Source</h2>
-      <p class="text-sm text-paper-muted mb-4">Where I spend the spare cycles.</p>
-      <p class="leading-relaxed mb-3">
-      Mostly working in the Kubernetes ecosystem out of curiosity from using it day to day; tidying bugs and getting familiar with how a project operates at scale. The kind of work where you spend a lot of time reading before you write any Go.
-      </p>
-      <p class="leading-relaxed mb-3">
-      On the side, a few personal projects worth pointing at:
-      </p>
-      <ul class="space-y-2 leading-relaxed list-disc pl-5 marker:text-paper-muted">
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/charta" class="underline-offset-2 underline">charta</a> — Rust MCP server for SCXML validation and codegen.
+    <section class="mb-20">
+      <div class="flex items-baseline gap-4 mb-1">
+        <h2 class="font-serif text-lg font-bold">Tau</h2>
+        <span class="text-sm text-paper-muted">
+          <a target="_blank" href="https://tau.bxrne.com" class="underline underline-offset-2">tau.bxrne.com</a>
+          <span class="mx-1">·</span>
+          <a target="_blank" href="https://github.com/bxrne/tau" class="underline underline-offset-2">github</a>
+        </span>
+      </div>
+      <p class="text-sm text-paper-muted mb-6">A time-series database built on algebraically precise temporal intervals.</p>
+
+      <div class="space-y-4 leading-relaxed">
+        <p>
+          Most time-series databases treat time as a stream of immutable points. Tau treats time as a sequence of
+          half-open intervals <code>[start, end)</code> that tile without gaps or overlap, forming a monoid under
+          concatenation with no boundary ambiguities and a formal algebraic structure.
+        </p>
+        <p>
+          Corrections work by appending a new layer over the same range. Every layer has a monotonically increasing ID;
+          the highest ID wins at query time: deterministic, no configuration, no coordination.
+          Compaction normalises any stack of N layers into one canonical layer. Every <code>AT</code>, <code>RANGE</code>,
+          and <code>REDUCE</code> result is identical before and after. This is a provable property, checked by
+          property-based tests on every build.
+        </p>
+        <p>
+          Derived lenses (<code>DERIVE LENS f AS expr</code>) compile expressions into lazy closures at definition time.
+          Closures capture other lens closures so derivations chain; cycle detection runs at <code>DERIVE</code> time
+          by walking the dependency graph.
+        </p>
+        <p>
+          Algebraic invariants are verified by Hegel/Hypothesis against hundreds of randomised inputs per property.
+          A deterministic simulation tester drives every transport × auth × WAL combination against a reference oracle,
+          injecting faults across hundreds of millions of simulated operations.
+        </p>
+        <p class="text-sm text-paper-muted pt-1">
+          Rust · TauQL · WAL · AES-256-GCM · Argon2id · property-based testing · deterministic simulation
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-20">
+      <h2 class="font-serif text-lg font-bold mb-6">Other Projects</h2>
+      <ul class="space-y-3 leading-relaxed">
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/vesper" class="underline underline-offset-2 shrink-0">vesper</a>
+          <span class="text-paper-muted">RISC-V64 kernel in Rust, <code>no_std</code>, no crates</span>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/vesper" class="underline-offset-2 underline">vesper</a> — RISC-V64 kernel in Rust, no_std, no crates.
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/apogee" class="underline underline-offset-2 shrink-0">apogee</a>
+          <span class="text-paper-muted">x86-64 bare-metal kernel in Rust, runs in QEMU with no underlying OS</span>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/apogee" class="underline-offset-2 underline">apogee</a> — x86-64 bare-metal kernel in Rust, runs in QEMU with no underlying OS.
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/launchrail" class="underline underline-offset-2 shrink-0">launchrail</a>
+          <span class="text-paper-muted">6DOF high-powered rocket simulator in Go</span>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/launchrail" class="underline-offset-2 underline">launchrail</a> — 6DOF high-powered rocket simulator in Go, v1.0.0.
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/charta" class="underline underline-offset-2 shrink-0">charta</a>
+          <span class="text-paper-muted">Rust MCP server for SCXML validation and codegen</span>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/logmgr" class="underline-offset-2 underline">logmgr</a> — zero-config structured logger for Go on a lock-free ring buffer.
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/zbox" class="underline underline-offset-2 shrink-0">zbox</a>
+          <span class="text-paper-muted">rootless Linux sandbox in Zig, no libc</span>
         </li>
-        <li>
-          <a target="_blank" href="https://github.com/bxrne/zbox" class="underline-offset-2 underline">zbox</a> — rootless Linux sandbox in Zig, no libc.
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/bxrne/logmgr" class="underline underline-offset-2 shrink-0">logmgr</a>
+          <span class="text-paper-muted">zero-config structured logger for Go on a lock-free ring buffer</span>
+        </li>
+        <li class="flex gap-3">
+          <a target="_blank" href="https://github.com/kubernetes/kube-state-metrics" class="underline underline-offset-2 shrink-0">kube-state-metrics</a>
+          <span class="text-paper-muted">Kubernetes metrics exporter, contributing bug fixes</span>
         </li>
       </ul>
     </section>
 
-    <section class="mt-16">
+    <section class="mb-8">
       <h2 class="font-serif text-lg font-bold mb-4">Elsewhere</h2>
       <p class="text-paper-muted leading-relaxed">
         <Link href="https://github.com/bxrne" external>GitHub</Link> ·
@@ -78,5 +110,6 @@ I used to do web dev freelance so I am proficient with the React + &lt;todays po
         <Link href="/resume.pdf" external>CV</Link>
       </p>
     </section>
+
   </div>
 </PageLayout>
