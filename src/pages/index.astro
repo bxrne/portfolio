@@ -1,7 +1,7 @@
 ---
 import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
-import { HOME, SITE } from "@consts";
+import { HOME } from "@consts";
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -20,9 +20,6 @@ import { HOME, SITE } from "@consts";
           My placements covered factory automation and teleoperation, ADAS radar ML, and AI investment research.
           Alongside that I worked on simulation and payload software for high-powered competition rockets.
         </p>
-        <p>
-          I write about projects and ideas on <Link href="/blog">my blog</Link>.
-        </p>
       </div>
     </section>
 
@@ -35,33 +32,19 @@ import { HOME, SITE } from "@consts";
           <a target="_blank" href="https://github.com/bxrne/tau" class="underline underline-offset-2">github</a>
         </span>
       </div>
-      <p class="text-sm text-paper-muted mb-6">A time-series database built on algebraically precise temporal intervals.</p>
+      <p class="text-sm text-paper-muted mb-6">A bitemporal time-series database where corrections are appended as new layers, not edits.</p>
 
       <div class="space-y-4 leading-relaxed">
         <p>
-          Most time-series databases treat time as a stream of immutable points. Tau treats time as a sequence of
-          half-open intervals <code>[start, end)</code> that tile without gaps or overlap, forming a monoid under
-          concatenation with no boundary ambiguities and a formal algebraic structure.
+          Most time-series databases treat a measurement as final once written, but real-world data gets corrected and
+          restated constantly. Tau's core atom is a value asserted true over a half-open interval <code>[start, end)</code>,
+          and a layer is an append-only, ordered stack of these atoms, corrections append a new layer that shadows the
+          old one at query time, newest wins, deterministic, no coordination. That single decision gives Tau bitemporality
+          almost for free, and propagates through compaction, storage, and a deterministic simulation tester that drives
+          the executor against a reference oracle under seeded fault injection&hellip;
         </p>
-        <p>
-          Corrections work by appending a new layer over the same range. Every layer has a monotonically increasing ID;
-          the highest ID wins at query time: deterministic, no configuration, no coordination.
-          Compaction normalises any stack of N layers into one canonical layer. Every <code>AT</code>, <code>RANGE</code>,
-          and <code>REDUCE</code> result is identical before and after. This is a provable property, checked by
-          property-based tests on every build.
-        </p>
-        <p>
-          Derived lenses (<code>DERIVE LENS f AS expr</code>) compile expressions into lazy closures at definition time.
-          Closures capture other lens closures so derivations chain; cycle detection runs at <code>DERIVE</code> time
-          by walking the dependency graph.
-        </p>
-        <p>
-          Algebraic invariants are verified by Hegel/Hypothesis against hundreds of randomised inputs per property.
-          A deterministic simulation tester drives every transport × auth × WAL combination against a reference oracle,
-          injecting faults across hundreds of millions of simulated operations.
-        </p>
-        <p class="text-sm text-paper-muted pt-1">
-          Rust · TauQL · WAL · AES-256-GCM · Argon2id · property-based testing · deterministic simulation
+        <p class="text-sm">
+          <Link href="/blog/15-tau">Read the full writeup →</Link>
         </p>
       </div>
     </section>
