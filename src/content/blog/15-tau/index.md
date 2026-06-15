@@ -168,6 +168,23 @@ Tally it up: never mutating, only appending, gives you a free audit log, as-of q
 
 That's one decision, the layer, propagating through compaction, storage, the log, concurrency, and testing. None of those are separate clever ideas; they're all the same idea, viewed from a different subsystem. That's usually the sign of a good architectural choice: not that it solves one problem cleverly, but that it makes several other problems stop being problems.
 
+## Measuring it: the bench crate
+
+Everything above is a claim about cost: compaction drops read cost from O(layers) to O(1) per point, the disk backend's append-only writes suit zstd and the page cache, point queries don't pay for TLS or auth. Claims about cost are testable, so I added a `bench` crate to test them: deterministic TauQL workloads (append-heavy, correction-heavy, point-query, range-scan, reduce-agg, derived-lens, compaction-stress) run at a fixed seed against either `libtau::Executor` directly or a real `tau` server over the wire, across a grid of storage, WAL, TLS, auth, and encryption configurations.
+
+Same reasoning as the data model section, almost a refrain at this point: TSBS and YCSB assume immutable point writes with no notion of a correction creating a new layer over an existing range, so a workload generator borrowed from either of them would be measuring a shape of write Tau doesn't actually do. The workloads had to come from TauQL itself.
+
+**Environment and method.** Every number below is from the resource-capped Docker compose stack (`container/docker-compose.bench.yml`), pinned to 1 CPU and 512MB, seed 42, scale 2000, engine layer (in-process `Executor`, no network), measured against [`tau-v0.4.0`](https://github.com/bxrne/tau/tree/tau-v0.4.0) plus a follow-up fix to the checkpoint cadence described below. Capping CPU and memory makes the numbers comparable across runs on the same machine; absolute throughput will still differ on other hardware. None of it is a competitive benchmark, and it's a single run on a single host with no averaging or error bars — every number quoted anywhere carries its seed, scale, config cell, and source tag, because a number without those is just a vibe with extra digits.
+
+Two results were worth knowing and not obvious from reading the code:
+
+- **The disk backend's checkpoint cadence is decoupled from compaction.** A checkpoint (flush, recompress, optionally encrypt, atomically rename the whole file) fires at most every 8 compactions, or sooner if the WAL size cap is hit — not on every compaction, which for a steady append stream would be roughly every `compact_threshold` appends. With that throttle, disk at zstd level 1 sits close to memory (append-heavy 30,489 vs 36,781 ops/sec, compaction-stress 247,403 vs 647,331 ops/sec). zstd level 1 and level 19 are the fast and slow ends of the compression range the storage grid covers; level 19 is roughly 7-25x slower than level 1 (4,381 / 9,802 ops/sec) because each checkpoint that does fire still recompresses the whole file at that level. Level 19 isn't a sane default for write-heavy workloads — it's there to show the cost of choosing a high compression level. The real default (level 3) sits much closer to level 1.
+- **Compaction threshold is a real lever, not a tuning nicety.** Threshold 64 gives roughly 12x the append throughput of threshold 4 on the in-memory backend (257,382 vs 20,900 ops/sec), because compaction runs an order of magnitude less often. The tradeoff, more layers to walk per query between compactions, is the same O(layers) read cost the data model section flagged as the thing compaction exists to bound. Tuning this knob is choosing where on that tradeoff you sit, and now there are numbers attached to both ends of it.
+
+Point queries, for what it's worth, held up: 1.3-1.5M ops/sec at the engine layer regardless of TLS, auth, or encryption, which is what you'd hope given those only apply at the wire layer. Good to have that confirmed rather than assumed.
+
+All of this runs against two layers (in-process engine, and wire with optional TLS/auth) across a config grid. See [tau's benchmarks page](https://tau.bxrne.com/docs/benchmarks/) for the full grid, methodology, and reproduction commands.
+
 ## What's unfinished, and where it goes next
 
 ### Compaction per database, not per server
@@ -180,7 +197,7 @@ The simulation currently injects storage and write-ahead-log faults. The determi
 
 ### More reduction operators
 
-`REDUCE` today covers the basics: min, max, avg, sum, count. Time-weighted aggregates are the natural fit for interval data, a value that held for 90% of a window should weight 90% of the average, and it's something point-sample TSDBs handle awkwardly because they don't have intervals to weight by in the first place. This feels like a genuine differentiator rather than a nice-to-have.
+`REDUCE` today covers the basics: min, max, avg, sum, count. Time-weighted aggregates are the natural fit for interval data, a value that held for 90% of a window should weight 90% of the average, and it's something point-sample TSDBs handle awkwardly because they don't have intervals to weight by in the first place. This feels like a real differentiator rather than a nice-to-have.
 
 ### Materialized, cached lenses
 
