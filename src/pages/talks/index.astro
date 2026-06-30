@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import { TALKS } from "@consts";
+
+const talks = (await getCollection("talks"))
+  .filter(talk => !talk.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<PageLayout title={TALKS.TITLE} description={TALKS.DESCRIPTION}>
+  <div class="space-y-10 pt-8 md:pt-16">
+    <div>
+      <h2 class="font-serif text-2xl font-bold mb-2">Talks</h2>
+      <p class="text-paper-muted">{TALKS.DESCRIPTION}</p>
+    </div>
+    <div class="space-y-8">
+      {talks.map(async (talk) => {
+        const { Content } = await talk.render();
+        return (
+          <article>
+            <div class="">
+              <h3 class="text-paper-fg font-medium">
+                {talk.data.url
+                  ? <a href={talk.data.url} target="_blank" class="hover:underline">{talk.data.title}</a>
+                  : talk.data.title
+                }
+              </h3>
+              <div class=" text-sm text-paper-muted">
+                {talk.data.location} · <FormattedDate date={talk.data.date} />
+              </div>
+            </div>
+            <div class="text-sm text-paper-muted mt-1 prose-talk">
+              <Content />
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</PageLayout>

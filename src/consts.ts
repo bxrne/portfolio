@@ -28,6 +28,11 @@ export const READING: Metadata = {
   DESCRIPTION: "Books and papers I've read and recommend.",
 };
 
+export const TALKS: Metadata = {
+  TITLE: "Talks",
+  DESCRIPTION: "Talks and presentations I've given.",
+};
+
 export const SOCIALS: Socials = [
   {
     NAME: "GitHub",
