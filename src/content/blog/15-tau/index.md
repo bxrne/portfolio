@@ -6,7 +6,7 @@ description: A deep dive into Tau, a time-series database designed with correcta
 
 **[repo](https://github.com/bxrne/tau)**, **[docs](https://tau.bxrne.com)**
 
-Tau stores data in a way that takes corrections seriously. Real-world measurements drift, get recalibrated, get restated. Tau treats every correction as a new layer rather than an edit, and the newest layer wins for query planning. On top of that it ships a small query language, TauQL, for defining and deriving lenses, either a stack of raw layers with valid and transaction time, or a series derived as an expression over other lenses. The result is something closer to a time-series-native materialized view than a bolt-on feature.
+Tau stores data in a way that takes corrections seriously. Real-world measurements drift, get recalibrated, get restated. Tau treats every correction as a new layer rather than an edit, and the newest layer wins at query time. On top of that it ships a small query language, TauQL, for defining and deriving lenses: a stack of raw layers with valid and transaction time, a series derived lazily as an expression over other lenses, or a materialised view of such an expression that refreshes itself when its sources are corrected. The result is something closer to a time-series-native materialized view than a bolt-on feature.
 
 
 ## Why write another db?
@@ -33,11 +33,13 @@ There's a pleasant analogy here to how lambda calculus treats state. A lambda te
 
 **Issues with layering**
 
-The obvious one is compaction: unbounded layers means unbounded read cost, since a query has to walk the stack from the top until it's covered every point it cares about. Tau's sweep-line compaction (more on this below) flattens multiple layers into one, resolving overlaps while preserving every value a query could observe. The threshold is configurable.
+The obvious one is compaction: unbounded layers means unbounded read cost, since a query has to walk the stack from the top until it's covered every point it cares about. Tau's compaction (more on this below) normalises the stack, resolving overlaps while preserving every value a query could observe. The threshold is configurable.
 
-The less obvious one is that compaction can't be allowed to block reads or writes, that's a real concurrency problem. Tau's answer is that compaction runs in the background and produces new compacted layers without mutating the existing ones. Readers keep working against the current stack throughout, writers keep appending. This fell out of the layer design almost as a side effect: once layers are immutable, compaction is "build a new layer and swap it in," which is a much easier problem than "rewrite this data in place while people are reading it." It also opens an obvious door toward replication: if consensus operates at the layer level, replicas can apply layers independently without coordinating on individual mutations.
+There's a subtlety here I got wrong the first time. Compaction can't collapse the stack to a single layer, because transaction time lives in the stack: flattening a correction written on Tuesday into the value written on Monday erases the fact that Monday's belief ever existed, and `AS OF Monday` starts lying. Compaction now works strictly *within* a transaction-time generation, a run of layers sharing a `written_at`, and never across. A burst of same-instant appends still collapses to one layer, which is the common case. Corrections made at distinct times stay distinct, which is the whole point of the second timeline.
 
-On disk, data is zstd-compressed and (optionally) encrypted at rest, and writes are replayed cleanly on startup. Because layers are append-only, disk writes are sequential, which is exactly the access pattern zstd and the page cache like. There's more efficiency to find here, particularly in how aggressively compaction runs, but the fundamentals are in place.
+The other tension is that compaction can't be allowed to block reads or writes. Tau's answer is not a background thread: compaction runs inline, on the append that crosses the threshold, and produces a new stack without mutating the old one. Each lens's layer stack is an `Arc<[Layer]>`, so a reader snapshots it with a pointer bump and keeps a consistent view for the whole query while a writer swaps a new stack in underneath. Copy-on-write, essentially RCU. This fell out of the layer design almost as a side effect: once layers are immutable, compaction is "build a new stack and swap the pointer," which is a much easier problem than "rewrite this data in place while people are reading it." It also opens an obvious door toward replication: if consensus operates at the layer level, replicas can apply layers independently without coordinating on individual mutations.
+
+On disk, data is zstd-compressed and (optionally) AES-256-GCM encrypted at rest, and writes are replayed cleanly on startup. Because layers are append-only, disk writes are sequential, which is exactly the access pattern zstd and the page cache like.
 
 ## The atom
 
@@ -47,13 +49,28 @@ This is a real departure from the point-sample model most TSDBs use. A point sam
 
 Timestamps are plain integers, with no units attached. That's deliberate dumbness: the engine doesn't moralize about whether you're using seconds or milliseconds, it just compares numbers. The caller picks a unit and stays consistent. Pushing that decision to the edge keeps the core model simple and keeps the engine from having to carry a timezone or calendar library it doesn't need.
 
+### One interval per axis
+
+The atom has since generalised, and it generalised in the direction the algebra was already pointing. A tau is no longer one interval, it's one half-open interval *per axis*: an N-orthotope, a box.
+
+```sql
+CREATE LENS grid float AXES (valid, region)
+APPEND LENS grid [0 100] [0 50] 1.0    -- a box, not a segment
+AT     LENS grid 10 25                 -- one coordinate per axis
+RANGE  LENS grid 0 100 AT (25)         -- sweep valid time, region fixed
+```
+
+Axis 0 is always valid time, so a plain lens is just the one-dimensional case and nothing about the original model changed. The extra axes are filter dimensions: region, sensor id, whatever discriminates a fact from a similar fact. This matters more than it sounds. In a point-sample store those dimensions are tags, which is to say a secondary index bolted beside the time column. Here they're the same kind of thing time is, and the same rules apply to them: half-open, tiling, correctable by appending a box that overlaps an older box.
+
+The cost showed up in compaction, where the sweep-line no longer works — more on that below.
+
 ## Layers, and the newest layer wins
 
 A layer is an ordered, non-overlapping run of these atoms appended together, with a monotonically increasing id. Corrections never mutate an existing layer, they append a new one that shadows the old one at query time. This is the conceptual heart of Tau; everything else in the system is downstream of it.
 
 The mental model is a stack of transparencies on an overhead projector. Each layer is one transparency. A query looks down through the stack and, at every point, the topmost transparency that has something drawn there wins.
 
-History is immutable and auditable, because nothing is ever thrown away, layer 1 above is still sitting there, untouched, after layer 3 was written. "As-of" queries are just "ignore any layer above N." Writes never block reads on old data, because old data never changes.
+History is immutable and auditable, because nothing is ever thrown away, layer 1 above is still sitting there, untouched, after layer 3 was written. "As-of" queries are just "ignore any layer written after this stamp", resolved against each layer's `written_at` rather than its position in the stack. Writes never block reads on old data, because old data never changes.
 
 The tension, flagged honestly: unbounded layers means unbounded read cost, since a query in the worst case has to look through every layer to find coverage for every point. That's the problem compaction exists to solve, and it's worth holding onto this tension until then.
 
@@ -62,7 +79,7 @@ The tension, flagged honestly: unbounded layers means unbounded read cost, since
 
 ### The query language
 
-TauQL is parsed into an AST by a small parser. The statement set splits cleanly: `CREATE` / `DROP` / `USE` / `APPEND` / `COPY` / `DERIVE` are DDL, and `AT` / `RANGE` / `REDUCE` / `SHOW` / `HISTORY` are queries.
+TauQL is parsed into an AST by a small `nom` parser that lives deliberately outside the kernel: parsing produces a statement, and the kernel routes that statement to whichever service owns it. The set splits cleanly by that ownership. `CREATE` / `DROP` / `USE` / `APPEND` / `COPY` / `DERIVE` / `XDERIVE` and the transaction verbs are mutations; `AT` / `RANGE` / `REDUCE` / `SHOW` / `HISTORY` are reads; users and grants are their own thing.
 
 ```sql
 CREATE LENS temp float
@@ -70,31 +87,45 @@ APPEND LENS temp 0 60 20.5, 60 120 21.0, 120 180 21.5
 APPEND LENS temp 60 120 25.0              -- correction: new layer
 
 AT     LENS temp 90                       -- VAL f25
+AT     LENS temp 90 AS OF 1781101736865   -- what we believed then
+AT     LENS temp 90 LAYER 1               -- what one layer asserts, for audit
 RANGE  LENS temp 0 180                    -- RANGE 3; 0:60:f20.5; ...
 RANGE  LENS temp 0 180 WHERE temp > 24.0 LIMIT 5
 REDUCE LENS temp 0 180 USING avg          -- min|max|avg|sum|count
 HISTORY LENS temp
 
-DERIVE LENS temp_f  AS temp * 1.8 + 32.0
-DERIVE LENS too_hot AS temp > 24.0
-DERIVE LENS rolling AS avg(temp, -3600, 0)
+DERIVE  LENS temp_f  AS temp * 1.8 + 32.0     -- lazy, recomputed per query
+DERIVE  LENS rolling AS avg(temp, -3600, 0)
+XDERIVE LENS temp_f_mat AS temp * 1.8 + 32.0  -- materialised, self-refreshing
 ```
+
+Around that core sits the unglamorous half: `START TRANSACTION` / `COMMIT` / `ROLLBACK` for multi-statement atomicity, `CREATE USER` / `GRANT` / `REVOKE` for CRUDA permissions, `SET TTL` for expiry, and `BACKUP` / `RESTORE`. None of it is interesting to write about and all of it is load-bearing.
 
 `AT`, `RANGE`, and `HISTORY` map onto the layer model almost too neatly: `AT` walks down the stack until it finds coverage, `RANGE` does the same across an interval, and `HISTORY` exposes the stack itself rather than walking it.
 
 Adding a new statement to TauQL means touching the syntax, the parser, the execution logic, and the wire encoding in lockstep, and there's no shortcut without giving up the type safety at each stage. It's a small tax, paid on every new statement, in exchange for a pipeline where each stage is checked against the one before it. A bit of ceremony now buys you not having to think about an entire class of bugs later.
 
-### The executor
+### The kernel
 
-A central executor parses each statement and dispatches it, threading two cross-cutting concerns through every one: a permission check, which checks the calling user's grants against what the statement needs, and a read-only check, which decides whether the statement needs a write lock at all.
+This started as a single central executor: one function that took a statement, checked the caller's grants, decided whether it needed a write lock, and dispatched it. It worked, and it accumulated. Every new statement meant another arm in the same match, and every cross-cutting concern (permissions, metrics, read-only routing, the virtual clock) was another thing threaded by hand through a function that was already doing too much.
 
-Derived lenses are pure expressions evaluated lazily at query time, there's no caching layer. That's a deliberate simplification for now, and it's the reason materialized lenses (more on this below) exist as a planned follow-up rather than something bolted on early.
+It's now a syscall-routing microkernel. A `Kernel` owns four built-in services — db (mutations), query (reads), auth (users and grants), metrics — and every statement flows through the kernel, which applies policy and routes it to the owning service. Services never call each other. Permission checks live in the kernel and nowhere else, so no service ever sees a statement the caller wasn't allowed to run. Beneath that sits a real capability layer: handles allocated from a slab, a `Service` trait whose `boot` gets a syscall context, and external handlers for host-backed I/O, so the thing an embedder registers and the thing tau ships are the same shape.
+
+The payoff I didn't anticipate was in testing. Two capabilities hang off each kernel rather than off the process: a virtual `Clock` that pins transaction stamps and TTL "now", and a `FaultInjector` that can arm a clean failure of a chosen upcoming WAL write. Because they're per-kernel and not global, simulations are self-contained and can run in parallel, and a divergence report can name the service that owned the op. The previous design had a process-global clock, which meant simulations had to be serialised against each other. That was a real bug and the architecture deleted it rather than fixing it.
+
+Two entry-point pairs, all `&self`: `exec` / `exec_read` are unrestricted and back library embedding, tests, and simulation; `exec_as` / `exec_read_as` resolve a caller and enforce grants, and back the TCP server. The split is deliberate. Auth is a transport concern, and a tau embedded in a process reading sensors off a serial port shouldn't need a dummy user to do it.
+
+Derived lenses stay pure expressions evaluated lazily at query time, walking the AST live with no caching. Materialised lenses (`XDERIVE`) are the eager counterpart, and they arrived since the first version of this post.
 
 ### Storage backends
 
-There are three storage backends. An in-memory backend holds layers in a plain list. A disk backend writes one zstd-compressed file per layer. A write-ahead log wraps either of the other two and replays on startup. Underneath all three sits the same idea: something that holds the layer stack.
+The in-memory backend is a map of lens name to `Arc<[Layer]>` with no I/O, and a write-ahead log can sit in front of either backend, replaying on startup. Underneath both sits the same idea: something that holds the layer stack.
 
-The layer-as-unit-of-storage mapping falls out naturally once you've committed to immutable layers: one immutable layer is one file is one compressible blob. Append-only writes on disk are sequential, which is exactly what zstd and the page cache want. The cost is the flip side of the same coin: file-per-layer means small layers proliferate, which is the other reason compaction exists.
+The disk backend has been rewritten since the first version of this post, and the reason is a good illustration of taking an idea too literally. It used to write one zstd-compressed file per layer, on the logic that one immutable layer is one file is one compressible blob, which is tidy right up until you have a correction-heavy workload and a directory with fifty thousand tiny files in it. Worse, every checkpoint rewrote the whole database file: flush, recompress, optionally encrypt, atomically rename. The per-append cost was dominated by work proportional to data that hadn't changed.
+
+It's an SSTable now, which is the boring answer and the correct one. A memtable absorbs appends. On checkpoint it flushes into a new immutable, zstd-compressed **run file**, and a small atomically-rewritten **manifest** tracks which runs are live. Nothing already on disk gets rewritten. Reads merge the memtable with the runs and resolve newest-wins and `AS OF` at read time rather than write time, which is what keeps time travel working across a restart. Each run carries an uncompressed footer with per-lens min/max bounds and a bloom filter, so a run that can't contain your point gets skipped without decompressing its body, and a decoded run body is cached because a run is immutable by construction.
+
+`DROP LENS` doesn't rewrite anything either: it bumps a per-lens epoch in the manifest and the old run entries are simply ignored on read. That trick is only available because the data was immutable to begin with, which is the theme of this whole post arriving in yet another subsystem.
 
 ### The write-ahead log
 
@@ -122,7 +153,7 @@ Undecided on whether a set of language specific libraries should be made, so for
 
 ## The algorithm that earns its keep: sweep-line compaction
 
-Compaction means flattening N stacked layers into one, resolving every overlap so the result is indistinguishable from querying the original stack.
+Compaction means flattening a generation's stacked layers into one, resolving every overlap so the result is indistinguishable from querying the original stack.
 
 The algorithm is the classic computational-geometry sweep, applied to time instead of space: take every interval endpoint across every layer, sort them, and sweep a line across them left to right. At each segment between two consecutive endpoints, exactly one value is "on top," the newest layer that covers that segment, and that's the value the compacted layer emits for that segment.
 
@@ -133,6 +164,14 @@ A concrete example: a base layer covers `[0, 100) = x`. A correction layer cover
 > after compaction, one layer covers 0 to 40 with x, then 40 to 60 with y, then 60 to 100 with x.
 
 Three segments out of two layers, and if a third layer corrected `[40, 60)` again, or `[90, 100)`, the sweep handles it the same way regardless of how many layers are stacked. Read cost drops from O(layers) back to O(1) per point queried. The algorithm itself is sort-the-endpoints-then-sweep-once: O(n log n) in the number of endpoints, which is the honest cost of the operation.
+
+### When the sweep stopped working
+
+The sweep-line is a one-dimensional algorithm, and boxes are not one-dimensional. Once a lens could have filter axes, sweeping valid time meant ignoring the other axes and merrily merging two taus that were never actually in conflict, because they sat in different regions.
+
+The multi-axis case uses **orthotope subtraction** instead. Within a generation, each older box has every strictly-newer box subtracted from it, the standard slab decomposition, yielding point-disjoint fragments; then coplanar adjacent fragments of equal value are merged back together. It's more expensive and less elegant than the sweep and it's the right answer: the result covers the same N-space region with the same value at every point, so every `AT`, `RANGE`, `REDUCE`, `AS OF`, and `HISTORY` gives an identical answer before and after. Single-axis lenses still take the sweep, because it's cheaper and the general case doesn't buy them anything.
+
+The invariant is the thing worth holding onto here, not either algorithm. Compaction is a normalisation that must preserve every observable query result, and that is a property you can state precisely and then test to death, which is what the next two sections are about.
 
 ## Property-based testing: proving the model, not the example
 
@@ -154,36 +193,19 @@ I use hegel from Antithesis for property-based testing, and it's a good fit: the
 
 This is the testing approach I'd point at first if someone asked what's actually rigorous about Tau. Deterministic simulation testing is having a moment, TigerBeetle and FoundationDB are the usual reference points, and it's worth being concrete about what it buys here.
 
-The framework itself is generic, not tied to Tau at all, with a separate driver for Tau specifically. Wall-clock time and randomness are replaced by a seeded, controllable schedule, so an entire execution, including its "distributed-ish" interleaving, becomes a pure function of a seed. A weighted behaviour tree picks the next operation from that seeded source of randomness. A fault-injection layer introduces write-ahead-log faults: torn writes, truncation, crash-at-the-worst-possible-moment.
+The framework itself is generic, not tied to Tau at all, with a separate driver for Tau specifically. Wall-clock time and randomness are replaced by a seeded, controllable schedule, so an entire execution, including its "distributed-ish" interleaving, becomes a pure function of a seed. A weighted behaviour tree picks the next operation from that seeded source of randomness, across roughly 26 op kinds: appends across types and databases, base and derived and materialised reads, lens DDL, transactions, extreme-timestamp probes.
 
-The driver runs the real executor against a reference oracle, a deliberately dumb, obviously-correct in-memory model of what Tau should do, sharing no code with the real engine. The same operation stream goes to both. The moment they disagree, that's a structured divergence report, and the seed that produced it is an exact, deterministic reproduction of the bug: rerun the same seed and you get the same failure every time. No flaky re-runs, no "couldn't reproduce."
+The fault injection has since grown past the write-ahead log. WAL profiles still arm an in-flight write failure to prove the WAL-first invariant, then follow it with at-rest truncation and corruption and a reopen probe. Disk profiles damage a random manifest or run file before wiping and replaying. Wire profiles alternate server crashes with connection drops, which was listed as future work in the first version of this post and isn't any more. Every one of them asserts the same thing: tau recovers, or it returns a clean error. It never panics.
+
+Runs are organised as a grid rather than a single scenario: storage × compaction × encryption × transport × auth, tiered into smoke, standard, and nightly. The point of the grid is that the invariant shouldn't care which cell it's in.
+
+The driver runs a real kernel against a reference oracle, a deliberately dumb, obviously-correct in-memory model of what Tau should do, sharing no code with the real engine. The same operation stream goes to both. The moment they disagree, that's a structured divergence report naming the service that owned the op, and the seed that produced it is an exact, deterministic reproduction of the bug: rerun the same seed and you get the same failure every time. No flaky re-runs, no "couldn't reproduce."
+
+This has caught real bugs, and the most satisfying one came from the at-rest damage probes: a corrupted file could decode an interval whose `lo` exceeded its `hi`, an inverted interval, which is a thing the type system happily allowed and the entire model says cannot exist. It panicked. The loader now rejects it as `InvalidData`.
 
 When a seed fails, the operation sequence is automatically minimized by delta debugging, down to the smallest sequence that still reproduces the divergence. It's the same philosophy as property-based testing, generate broadly, then narrow to the smallest counterexample, but applied across an entire simulated run rather than a single function call.
 
-The fault injection is what makes this more than a fancy fuzzer for the executor. Because layers are immutable and append-only, the correct behaviour after a torn write or a crash mid-compaction is actually definable: "replay everything that was durably written, and nothing that wasn't" is a precise statement, not a vibe. That definability is what makes the faults testable at all, and it's another place where the layer design pays for itself.
-
-## Why immutability keeps paying off
-
-Tally it up: never mutating, only appending, gives you a free audit log, as-of queries that are just "stop reading at layer N," replay that's just "re-append in order," fault behaviour that's precisely definable, a disk format that's naturally cache- and compression-friendly, and reads that barely need to lock.
-
-That's one decision, the layer, propagating through compaction, storage, the log, concurrency, and testing. None of those are separate clever ideas; they're all the same idea, viewed from a different subsystem. That's usually the sign of a good architectural choice: not that it solves one problem cleverly, but that it makes several other problems stop being problems.
-
-## Measuring it: the bench crate
-
-Everything above is a claim about cost: compaction drops read cost from O(layers) to O(1) per point, the disk backend's append-only writes suit zstd and the page cache, point queries don't pay for TLS or auth. Claims about cost are testable, so I added a `bench` crate to test them: deterministic TauQL workloads (append-heavy, correction-heavy, point-query, range-scan, reduce-agg, derived-lens, compaction-stress) run at a fixed seed against either `libtau::Executor` directly or a real `tau` server over the wire, across a grid of storage, WAL, TLS, auth, and encryption configurations.
-
-Same reasoning as the data model section, almost a refrain at this point: TSBS and YCSB assume immutable point writes with no notion of a correction creating a new layer over an existing range, so a workload generator borrowed from either of them would be measuring a shape of write Tau doesn't actually do. The workloads had to come from TauQL itself.
-
-**Environment and method.** Every number below is from the resource-capped Docker compose stack (`container/docker-compose.bench.yml`), pinned to 1 CPU and 512MB, seed 42, scale 2000, engine layer (in-process `Executor`, no network), measured against [`tau-v0.4.0`](https://github.com/bxrne/tau/tree/tau-v0.4.0) plus a follow-up fix to the checkpoint cadence described below. Capping CPU and memory makes the numbers comparable across runs on the same machine; absolute throughput will still differ on other hardware. None of it is a competitive benchmark, and it's a single run on a single host with no averaging or error bars — every number quoted anywhere carries its seed, scale, config cell, and source tag, because a number without those is just a vibe with extra digits.
-
-Two results were worth knowing and not obvious from reading the code:
-
-- **The disk backend's checkpoint cadence is decoupled from compaction.** A checkpoint (flush, recompress, optionally encrypt, atomically rename the whole file) fires at most every 8 compactions, or sooner if the WAL size cap is hit — not on every compaction, which for a steady append stream would be roughly every `compact_threshold` appends. With that throttle, disk at zstd level 1 sits close to memory (append-heavy 30,489 vs 36,781 ops/sec, compaction-stress 247,403 vs 647,331 ops/sec). zstd level 1 and level 19 are the fast and slow ends of the compression range the storage grid covers; level 19 is roughly 7-25x slower than level 1 (4,381 / 9,802 ops/sec) because each checkpoint that does fire still recompresses the whole file at that level. Level 19 isn't a sane default for write-heavy workloads — it's there to show the cost of choosing a high compression level. The real default (level 3) sits much closer to level 1.
-- **Compaction threshold is a real lever, not a tuning nicety.** Threshold 64 gives roughly 12x the append throughput of threshold 4 on the in-memory backend (257,382 vs 20,900 ops/sec), because compaction runs an order of magnitude less often. The tradeoff, more layers to walk per query between compactions, is the same O(layers) read cost the data model section flagged as the thing compaction exists to bound. Tuning this knob is choosing where on that tradeoff you sit, and now there are numbers attached to both ends of it.
-
-Point queries, for what it's worth, held up: 1.3-1.5M ops/sec at the engine layer regardless of TLS, auth, or encryption, which is what you'd hope given those only apply at the wire layer. Good to have that confirmed rather than assumed.
-
-All of this runs against two layers (in-process engine, and wire with optional TLS/auth) across a config grid. See [tau's benchmarks page](https://tau.bxrne.com/docs/benchmarks/) for the full grid, methodology, and reproduction commands.
+The fault injection is what makes this more than a fancy fuzzer for the kernel. Because layers are immutable and append-only, the correct behaviour after a torn write or a crash mid-compaction is actually definable: "replay everything that was durably written, and nothing that wasn't" is a precise statement, not a vibe. That definability is what makes the faults testable at all, and it's another place where the layer design pays for itself.
 
 ## What's unfinished, and where it goes next
 
@@ -191,25 +213,26 @@ All of this runs against two layers (in-process engine, and wire with optional T
 
 Compaction currently triggers at a fixed layer count, server-wide. A hot database and a cold one have very different ideal cadences. Per-database policy is the obvious next step, and the open question is what the trigger should look like beyond a raw layer count: write volume, time since last compaction, or some mix.
 
-### Network faults in simulation
-
-The simulation currently injects storage and write-ahead-log faults. The deterministic scheduler that makes that possible doesn't care what it's scheduling, extending it to model the wire as another fault source (partition, reorder, delay, duplicate) is mostly a matter of giving it something to schedule, not a new framework.
-
 ### More reduction operators
 
-`REDUCE` today covers the basics: min, max, avg, sum, count. Time-weighted aggregates are the natural fit for interval data, a value that held for 90% of a window should weight 90% of the average, and it's something point-sample TSDBs handle awkwardly because they don't have intervals to weight by in the first place. This feels like a real differentiator rather than a nice-to-have.
+`REDUCE` today covers the basics: min, max, avg, sum, count. Time-weighted aggregates are the natural fit for interval data, a value that held for 90% of a window should weight 90% of the average, and it's something point-sample TSDBs handle awkwardly because they don't have intervals to weight by in the first place. This feels like a real differentiator rather than a nice-to-have, and it's still not written.
 
-### Materialized, cached lenses
+### Replication
 
-Derived lenses recompute on every query. The fix is materialization with layer-id-based invalidation: a derived lens is only stale if a layer below it in its dependency chain changed since it was last materialized. The immutable layer id is already a perfect cache key, it's sitting there unused.
+Still the big one, and still only a sketch. If consensus operates at the layer level rather than the mutation level, replicas can apply layers independently, and the immutability that made compaction easy should make agreement easier too. That's a hypothesis, not a design.
+
+### Done since this post first went up
+
+Two of the items that used to live in this section have been built, which is the nice half of writing about a project while it's moving:
+
+- **Materialised lenses** landed as `XDERIVE`. A materialised lens stores its result eagerly and re-materialises when a lens anywhere below it in its dependency chain is corrected, walking through intermediate lazy lenses to find the ones that matter. The lazy `DERIVE` still exists and still recomputes per query, because sometimes that's what you want.
+- **Network faults in simulation** landed alongside disk faults. The prediction that the scheduler wouldn't care what it was scheduling turned out to be correct, which was pleasant.
 
 ## Summary
 
 Tau isn't trying to beat InfluxDB on ingest throughput. The argument is narrower and, I think, more important: **the data model is a choice, and most time-series databases never made it consciously.** They inherited point-sample-as-column from general-purpose databases and then spent years building workarounds for corrections, restatements, and time travel on top of a model that doesn't have room for any of them.
 
 Everything in Tau, the layers, the compaction, the bitemporal queries, the testing strategy, rhymes with one decision: `[start, end)`. A half-open interval, asserted true, replaced by appending rather than editing. It's the smallest possible decision in the system, and it's the one everything else is downstream of.
-
-So: what's the atom in your system, and did you choose it, or did you inherit it?
 
 ---
 

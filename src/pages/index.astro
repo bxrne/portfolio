@@ -36,12 +36,7 @@ import { HOME } from "@consts";
 
       <div class="space-y-4 leading-relaxed">
         <p>
-          Most time-series databases treat a measurement as final once written, but real-world data gets corrected and
-          restated constantly. Tau's core atom is a value asserted true over a half-open interval <code>[start, end)</code>,
-          and a layer is an append-only, ordered stack of these atoms, corrections append a new layer that shadows the
-          old one at query time, newest wins, deterministic, no coordination. That single decision gives Tau bitemporality
-          almost for free, and propagates through compaction, storage, and a deterministic simulation tester that drives
-          the executor against a reference oracle under seeded fault injection&hellip;
+	  Tau stores data as half-open intervals with valid time and transaction time, treating every correction as a new layer rather than an edit. It ships a small query language (TauQL) for defining raw layers, derived series, and materialised views that refresh themselves when their sources are corrected. The result is a time-series-native materialized view system where compaction normalizes the layer stack without losing auditability.
         </p>
         <p class="text-sm">
           <Link href="/blog/15-tau">Read the full writeup →</Link>
