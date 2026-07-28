@@ -1,13 +1,12 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import { BLOG } from "@consts";
+import { readingTime } from "@lib/utils";
 
 const data = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  
+
 type Acc = {
   [year: string]: CollectionEntry<"blog">[];
 }
@@ -21,28 +20,35 @@ const posts = data.reduce((acc: Acc, post) => {
     return acc;
   }, {});
 
-const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a)); 
+const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
-<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
-  <div class="space-y-10 pt-8 md:pt-16">
-    <div>
-      <h2 class="font-serif text-2xl font-bold mb-2">Writing</h2>
-      <p class="text-paper-muted">{BLOG.DESCRIPTION}</p>
-    </div>
-    <div class="space-y-8">
-      {years.map(year => (
-        <section class="space-y-2">
-          <h3 class="font-serif text-lg font-medium text-paper-muted">
-            {year}
-          </h3>
-          <div>
-            {posts[year].map((post) => (
-              <ArrowCard entry={post} />
-            ))}
+<PageLayout title="Writing" description="Thoughts, guides, and notes.">
+  <div class="mx-auto px-4 pt-2 pb-20" style="max-width: 68rem;">
+    <div class="border-2 p-4" style="border-color: var(--border);">
+      {years.map((year, yi) => {
+        const isLastYear = yi === years.length - 1;
+        const yearPrefix = isLastYear ? "└──" : "├──";
+        return (
+          <div class="text-sm leading-relaxed" style="color: var(--fg)">
+            <span style="color: var(--muted)">{yearPrefix} {year}/</span>
+            <div class="ml-6">
+              {posts[year].map((post, pi) => {
+                const isLastPost = pi === posts[year].length - 1;
+                const postPrefix = isLastPost ? "└──" : "├──";
+                return (
+                  <div class="flex items-baseline gap-3">
+                    <a href={`/blog/${post.slug}`}>
+                      <span style="color: var(--muted)">{postPrefix}</span> {post.data.title}
+                    </a>
+                    <span class="text-xs shrink-0" style="color: var(--muted)">{readingTime(post.body)}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </section>
-      ))}
+        );
+      })}
     </div>
   </div>
 </PageLayout>

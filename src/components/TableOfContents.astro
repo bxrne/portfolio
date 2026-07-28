@@ -10,23 +10,26 @@ interface Props {
 }
 
 const { headings } = Astro.props;
-const filteredHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
-{filteredHeadings.length > 0 && (
-  <nav class="mb-8 border border-paper-border rounded-lg p-4">
-    <h2 class="font-serif text-sm font-semibold text-paper-muted uppercase tracking-wide mb-2">Contents</h2>
-    <ul class="space-y-1 text-sm">
-      {filteredHeadings.map((heading) => (
-        <li class={heading.depth === 3 ? "pl-4" : ""}>
-          <a
-            href={`#${heading.slug}`}
-            class="text-paper-fg underline-offset-2"
-          >
-            {heading.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+{filtered.length > 0 && (
+  <nav class="mb-8 border-2 p-3" style="border-color: var(--border)">
+    <h2 class="text-xs font-bold mb-2 uppercase tracking-wider" style="color: var(--muted)">Contents</h2>
+    <div class="text-xs leading-relaxed" style="color: var(--muted)">
+      {filtered.map((h, i) => {
+        const isLast = i === filtered.length - 1;
+        const prefix = h.depth === 3 ? "│   ├──" : "    ├──";
+        const lastPrefix = h.depth === 3 ? "│   └──" : "    └──";
+        const p = isLast ? lastPrefix : prefix;
+        return (
+          <div>
+            <a href={`#${h.slug}`} style="color: var(--muted)" class="hover:underline">
+              {p} {h.text}
+            </a>
+          </div>
+        );
+      })}
+    </div>
   </nav>
 )}

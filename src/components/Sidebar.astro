@@ -1,10 +1,10 @@
 ---
-import { SITE, SOCIALS } from "@consts";
+import { SOCIALS } from "@consts";
 
 const pathname = Astro.url.pathname;
 
 const links = [
-  { href: "/", label: "About" },
+  { href: "/", label: "Home" },
   { href: "/blog", label: "Writing" },
   { href: "/work", label: "Work" },
   { href: "/reading-list", label: "Reading" },
@@ -17,43 +17,133 @@ function isActive(href: string) {
 }
 ---
 
-<aside class="md:w-48 lg:w-56 shrink-0 pt-6 md:pt-16 pb-4 md:pb-0">
-  <div class="md:sticky md:top-16">
-    <a href="/" class="block mb-8">
-      <h1 class="font-serif text-xl font-bold text-paper-fg tracking-tight">
-        {SITE.NAME}
-      </h1>
-    </a>
-    <nav class="flex flex-row flex-wrap gap-x-4 gap-y-1 md:flex-col md:gap-x-0 md:gap-y-0 md:space-y-1 text-sm font-medium">
+  <div style="
+    max-width: 60rem;
+    width: calc(100% - 1.5rem);
+    margin: 1rem auto 0;
+    padding: 0 1rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  ">
+    <a href="/" class="font-bold text-base shrink-0" style="color: var(--fg)">bxrne</a>
+    <nav class="hidden md:flex items-center gap-4 flex-1 justify-center">
       {links.map(({ href, label }) => (
         <a
           href={href}
           class:list={[
-            "py-0.5",
-            isActive(href)
-              ? "text-paper-fg font-medium"
-              : "text-paper-muted",
+            "nav-link text-sm",
+            isActive(href) ? "font-bold" : "",
           ]}
         >
           {label}
         </a>
       ))}
     </nav>
-    <div class="hidden md:block mt-8 pt-6 border-t border-paper-border">
-      <ul class="space-y-1 text-sm text-paper-muted">
-        {SOCIALS.map((social) => (
-          <li>
-            <a href={social.HREF} target="_blank">
-              {social.NAME}
-            </a>
-          </li>
-        ))}
-        <li>
-          <a href={`mailto:${SITE.EMAIL}`}>
-            Email
-          </a>
-        </li>
-      </ul>
+    <select id="theme-select" class="theme-select hidden md:block">
+      <option value="mono" selected>mono</option>
+      <option value="monokai">monokai</option>
+      <option value="solarized">solarized</option>
+      <option value="nord">nord</option>
+      <option value="dracula">dracula</option>
+      <option value="tokyo-night">tokyo night</option>
+      <option value="sticky">sticky</option>
+    </select>
+    <button id="menu-btn" class="md:hidden theme-btn shrink-0" aria-label="Menu">menu</button>
+  </div>
+
+<div id="drawer-overlay" class="fixed inset-0 z-40 hidden md:hidden" style="background-color: rgba(0,0,0,0.3)"></div>
+
+<div id="drawer" class="fixed bottom-0 left-0 right-0 z-50 transform translate-y-full transition-transform duration-200 md:hidden" style="background: var(--card-bg);">
+  <div class="flex items-center justify-end px-4 h-12">
+    <button id="drawer-close" class="theme-btn" aria-label="Close menu">close</button>
+  </div>
+  <nav class="p-4 space-y-2">
+    {links.map(({ href, label }) => (
+      <a
+        href={href}
+        class="block px-3 py-2 text-sm"
+        style={`border: 2px solid ${isActive(href) ? 'var(--border)' : 'transparent'}; background-color: ${isActive(href) ? 'var(--accent)' : 'transparent'}; color: ${isActive(href) ? 'var(--bg)' : 'var(--fg)'}`}
+      >
+        {label}
+      </a>
+    ))}
+  </nav>
+  <div class="p-4 space-y-3">
+    <select id="theme-select-mobile" class="theme-select w-full">
+      <option value="mono" selected>mono</option>
+      <option value="monokai">monokai</option>
+      <option value="solarized">solarized</option>
+      <option value="nord">nord</option>
+      <option value="dracula">dracula</option>
+      <option value="tokyo-night">tokyo night</option>
+      <option value="sticky">sticky</option>
+    </select>
+    <div class="flex items-center gap-0 text-xs">
+      {SOCIALS.map((social, i) => (
+        <span>
+          <a href={social.HREF} target="_blank">{social.NAME}</a>
+          {i < SOCIALS.length - 1 && <span class="mx-2">/</span>}
+        </span>
+      ))}
     </div>
   </div>
-</aside>
+</div>
+
+<script>
+  const menuBtn = document.getElementById("menu-btn")!;
+  const drawer = document.getElementById("drawer")!;
+  const overlay = document.getElementById("drawer-overlay")!;
+  const closeBtn = document.getElementById("drawer-close")!;
+
+  function open() {
+    drawer.classList.remove("translate-y-full");
+    overlay.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+  function close() {
+    drawer.classList.add("translate-y-full");
+    overlay.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
+  menuBtn.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+  overlay.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  const selectDesktop = document.getElementById("theme-select") as HTMLSelectElement;
+  const selectMobile = document.getElementById("theme-select-mobile") as HTMLSelectElement;
+  const saved = localStorage.getItem("theme") || "mono";
+
+  function applyTheme(value: string) {
+    const html = document.documentElement;
+    if (value === "mono") {
+      html.removeAttribute("data-theme");
+    } else {
+      html.setAttribute("data-theme", value);
+    }
+    localStorage.setItem("theme", value);
+    selectDesktop.value = value;
+    selectMobile.value = value;
+  }
+
+  selectDesktop.addEventListener("change", () => applyTheme(selectDesktop.value));
+  selectMobile.addEventListener("change", () => applyTheme(selectMobile.value));
+  applyTheme(saved);
+</script>
+
+<style>
+  .nav-link {
+    transition: background 0.15s ease, color 0.15s ease;
+    padding: 0.25rem 0.5rem;
+  }
+  .nav-link:hover {
+    background: var(--hover-bg);
+    color: var(--hover-fg);
+  }
+</style>

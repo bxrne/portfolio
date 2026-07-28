@@ -1,12 +1,6 @@
 ---
 import "../styles/global.css";
-import "@fontsource/playfair-display/latin-500.css";
-import "@fontsource/playfair-display/latin-500-italic.css";
-import "@fontsource/playfair-display/latin-700.css";
-import "@fontsource/playfair-display/latin-800.css";
 import "@fontsource/geist-mono/latin-400.css";
-import playfair500 from "@fontsource/playfair-display/files/playfair-display-latin-500-normal.woff2";
-import playfair700 from "@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2";
 import geistMono400 from "@fontsource/geist-mono/files/geist-mono-latin-400-normal.woff2";
 
 interface Props {
@@ -28,8 +22,6 @@ const { title, description, image = "/nano.png" } = Astro.props;
 <meta name="generator" content={Astro.generator} />
 
 <!-- Font preloads -->
-<link rel="preload" href={playfair500} as="font" type="font/woff2" crossorigin/>
-<link rel="preload" href={playfair700} as="font" type="font/woff2" crossorigin/>
 <link rel="preload" href={geistMono400} as="font" type="font/woff2" crossorigin/>
 
 <!-- Canonical URL -->
@@ -65,35 +57,3 @@ const { title, description, image = "/nano.png" } = Astro.props;
   );
 </script>
 
-<script is:inline>
-  function init() {
-    onScroll();
-
-    const backToTop = document.getElementById("back-to-top");
-    backToTop?.addEventListener("click", (event) => scrollToTop(event));
-
-    const backToPrev = document.getElementById("back-to-prev");
-    backToPrev?.addEventListener("click", () => window.history.back());
-
-    document.addEventListener("scroll", onScroll);
-  }
-
-  function onScroll() {
-    if (window.scrollY > 0) {
-      document.documentElement.classList.add("scrolled");
-    } else {
-      document.documentElement.classList.remove("scrolled");
-    }
-  }
-
-  function scrollToTop(event) {
-    event.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", () => init());
-  document.addEventListener("astro:after-swap", () => init());
-</script>

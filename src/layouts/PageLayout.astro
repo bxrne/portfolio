@@ -3,8 +3,7 @@ import Head from "@components/Head.astro";
 import Sidebar from "@components/Sidebar.astro";
 import Footer from "@components/Footer.astro";
 import { SITE } from "@consts";
-import Analytics from "@vercel/analytics/astro";
-import SpeedInsights from "@vercel/speed-insights/astro";
+
 
 type Props = {
   title: string;
@@ -20,16 +19,10 @@ const { title, description } = Astro.props;
     <Head title={`${title} | ${SITE.NAME}`} description={description} />
   </head>
   <body>
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 md:px-8">
-      <div class="flex flex-col md:flex-row md:gap-12 lg:gap-24 min-h-screen">
-        <Sidebar />
-        <main class="flex-1 min-w-0">
-          <slot />
-          <Footer />
-        </main>
-      </div>
-    </div>
-    <Analytics />
-    <SpeedInsights />
+    <Sidebar />
+    <main class="mx-auto px-4 sm:px-6 md:px-8 w-full flex-1" style="max-width: 60rem;">
+      <slot />
+    </main>
+    <Footer class="shrink-0" />
   </body>
 </html>

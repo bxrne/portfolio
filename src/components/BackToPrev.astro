@@ -6,6 +6,4 @@ type Props = {
 const { href } = Astro.props;
 ---
 
-<a href={href} class="text-sm text-paper-muted">
-  ← <slot/>
-</a>
+<a href={href} class="text-xs" style="color: var(--muted)">← <slot/></a>

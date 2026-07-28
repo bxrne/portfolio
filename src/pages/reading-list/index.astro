@@ -1,23 +1,35 @@
 ---
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard.astro";
-import { READING } from "@consts";
 
 const readings = (await getCollection("reading"))
-  .filter(reading => !reading.data.draft)
+  .filter((r) => !r.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<PageLayout title={READING.TITLE} description={READING.DESCRIPTION}>
-  <div class="space-y-10 pt-8 md:pt-16">
-    <div>
-      <h2 class="font-serif text-2xl font-bold mb-2">Reading</h2>
-      <p class="text-paper-muted">{READING.DESCRIPTION}</p>
-    </div>
-    <div>
-      {readings.map((reading) => (
-        <ArrowCard entry={reading} />
+<PageLayout title="Reading" description="Books and papers I've read and recommend.">
+  <div class="pt-4 pb-20">
+    <div class="border-2" style="border-color: var(--border);">
+      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="color: var(--muted);">
+        <span style="width: 6rem;">date</span>
+        <span>title</span>
+        <span style="margin-left: auto;">author</span>
+      </div>
+      {readings.map((entry) => (
+        <div class="flex items-baseline gap-3 px-4 py-2 text-sm">
+          <span class="text-xs shrink-0" style="color: var(--muted); width: 6rem;">
+            {entry.data.date.toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+          </span>
+          <span class="font-bold">
+            {entry.data.url
+              ? <a href={entry.data.url} target="_blank">{entry.data.title}</a>
+              : entry.data.title
+            }
+          </span>
+          <span class="text-xs shrink-0" style="color: var(--muted); margin-left: auto;">
+            {entry.data.author}
+          </span>
+        </div>
       ))}
     </div>
   </div>

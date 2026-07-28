@@ -1,19 +1,18 @@
 ---
-import { cn } from "@lib/utils";
-
 type Props = {
   href: string;
   external?: boolean;
-  underline?: boolean;
 }
 
-const { href, external, underline = true, ...rest } = Astro.props;
+const { href, external, ...rest } = Astro.props;
 ---
 
-<a 
-  href={href} 
-  target={ external ? "_blank" : "_self" } 
-  class={cn("inline-block text-paper-fg", underline && "underline underline-offset-2 decoration-current")}
-  {...rest}>
+<a
+  href={href}
+  target={external ? "_blank" : "_self"}
+  style="color: var(--link)"
+  class="underline underline-offset-2 decoration-from-font"
+  {...rest}
+>
   <slot/>
 </a>

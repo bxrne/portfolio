@@ -1,61 +1,77 @@
 ---
+import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
-import Link from "@components/Link.astro";
-import { HOME } from "@consts";
+import ProjectsCarousel from "@components/ProjectsCarousel.astro";
+import { HOME, SITE } from "@consts";
+import { readingTime } from "@lib/utils";
+
+const recentPosts = (await getCollection("blog"))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <div class="pt-8 md:pt-20 max-w-2xl">
+  <div class="pt-4">
 
-    <section class="flex flex-col sm:flex-row gap-10 items-start mb-20">
-      <img
-        src="/headshot.jpg"
-        alt="Adam Byrne"
-        class="w-24 h-24 object-cover grayscale shrink-0"
-      />
-      <div class="space-y-3 leading-relaxed">
-        <p>
-          Hi, I'm Adam. I write systems software: databases, kernels, simulators.
-          I studied through <a target="_blank" href="https://software-engineering.ie">ISE (MSc)</a>, a residency-based programme where half the degree is spent in industry.
-          My placements covered factory automation and teleoperation, ADAS radar ML, and AI investment research.
-          Alongside that I worked on simulation and payload software for high-powered competition rockets.
-        </p>
+    <div class="border-2 p-4 mb-8" style="border-color: var(--border);">
+      <div class="flex items-start gap-4">
+        <img
+          src="/headshot.jpg"
+          alt="Adam Byrne"
+          class="w-16 h-16 object-cover grayscale border-2 shrink-0"
+          style="border-color: var(--border);"
+        />
+        <div>
+          <p class="text-sm leading-relaxed">
+            Hi, I'm Adam. I write systems software: databases, kernels, simulators.
+          </p>
+          <p class="text-sm leading-relaxed mt-2">
+            I studied through ISE (MSc), a residency-based programme where half the
+            degree is spent in industry. My placements covered factory automation
+            and teleoperation, ADAS radar ML, and AI investment research.
+          </p>
+          <p class="text-sm leading-relaxed mt-2">
+            Alongside that I worked on simulation and payload software for
+            high-powered competition rockets.
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section class="mb-20">
-      <div class="flex items-baseline gap-4 mb-1">
-        <h2 class="font-serif text-lg font-bold">Tau</h2>
-        <span class="text-sm text-paper-muted">
-          <a target="_blank" href="https://tau.bxrne.com" class="underline underline-offset-2">tau.bxrne.com</a>
-          <span class="mx-1">·</span>
-          <a target="_blank" href="https://github.com/bxrne/tau" class="underline underline-offset-2">github</a>
-        </span>
-      </div>
-      <p class="text-sm text-paper-muted mb-6">A bitemporal time-series database where corrections are appended as new layers, not edits.</p>
+    <h2 class="font-bold text-base mb-4">Pinned Projects</h2>
+    <ProjectsCarousel />
 
-      <div class="space-y-4 leading-relaxed">
-        <p>
-	  Tau stores data as half-open intervals with valid time and transaction time, treating every correction as a new layer rather than an edit. It ships a small query language (TauQL) for defining raw layers, derived series, and materialised views that refresh themselves when their sources are corrected. The result is a time-series-native materialized view system where compaction normalizes the layer stack without losing auditability.
-        </p>
-        <p class="text-sm">
-          <Link href="/blog/15-tau">Read the full writeup →</Link>
-        </p>
-      </div>
-    </section>
+    <h2 class="font-bold text-base mt-8 mb-4">Recent Writing</h2>
+    <div class="border-2" style="border-color: var(--border);">
+      {recentPosts.map((post, index) => (
+        <a
+          href={`/blog/${post.slug}`}
+          class="flex items-start gap-3 p-3 hover:bg-black/5 transition-colors group"
+          style={index < recentPosts.length - 1 ? "border-bottom: 2px solid var(--border);" : ""}
+        >
+          <div class="shrink-0 w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-xs font-mono" style="color: var(--muted);">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline justify-between gap-2">
+              <span class="text-sm font-medium group-hover:underline">{post.data.title}</span>
+              <span class="text-xs shrink-0" style="color: var(--muted);">{readingTime(post.body)}</span>
+            </div>
+            <p class="text-xs mt-1 line-clamp-1" style="color: var(--muted);">{post.data.description}</p>
+          </div>
+        </a>
+      ))}
+    </div>
 
-    
-
-    <section class="mb-8">
-      <h2 class="font-serif text-lg font-bold mb-4">Elsewhere</h2>
-      <p class="text-paper-muted leading-relaxed">
-        <Link href="https://github.com/bxrne" external>GitHub</Link> ·
-        <Link href="https://www.linkedin.com/in/bxrne" external>LinkedIn</Link> ·
-        <Link href="https://twitter.com/abxrne" external>Twitter</Link> ·
-        <Link href="https://substack.com/@bxrne" external>Substack</Link> ·
-        <Link href="/resume.pdf" external>CV</Link>
-      </p>
-    </section>
+    <h2 class="font-bold text-base mt-8 mb-4">Elsewhere</h2>
+    <div class="border-2 p-3 text-sm flex flex-wrap gap-x-4 gap-y-1" style="border-color: var(--border);">
+      <a href="https://github.com/bxrne" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/bxrne" target="_blank">LinkedIn</a>
+      <a href="https://twitter.com/abxrne" target="_blank">Twitter</a>
+      <a href="https://substack.com/@bxrne" target="_blank">Substack</a>
+      <a href="/resume.pdf" target="_blank">CV</a>
+    </div>
 
   </div>
 </PageLayout>

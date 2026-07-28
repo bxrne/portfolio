@@ -2,8 +2,6 @@
 import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import { dateRange } from "@lib/utils";
-import { WORK } from "@consts";
-import Link from "@components/Link.astro";
 
 const collection = (await getCollection("work"))
   .sort((a, b) => new Date(b.data.dateStart).valueOf() - new Date(a.data.dateStart).valueOf());
@@ -16,31 +14,38 @@ const work = await Promise.all(
 );
 ---
 
-<PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
-  <div class="space-y-10 pt-8 md:pt-16">
-    <div>
-      <h2 class="font-serif text-2xl font-bold mb-2">Work</h2>
-      <p class="text-paper-muted">
-        {WORK.DESCRIPTION} <Link href="/resume.pdf" external>(CV)</Link>
-      </p>
-    </div>
-    <ul class="space-y-8">
-      {work.map(entry => (
-        <li>
-          <div class="text-sm text-paper-muted">
-            {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-          </div>
-          <div class="font-serif font-bold text-paper-fg mt-1">
-            {entry.data.company}
-          </div>
-          <div class="text-sm text-paper-muted">
-            {entry.data.role}
-          </div>
-          <article class="mt-2">
+<PageLayout title="Work" description="Professional experience and education.">
+  <div class="pt-2 pb-20">
+    <div class="border-2" style="border-color: var(--border);">
+      {work.map((entry) => (
+        <details class="group">
+          <summary class="flex items-baseline gap-3 px-4 py-2 text-sm cursor-pointer list-none select-none">
+            <span class="text-xs shrink-0" style="color: var(--muted); width: 6rem;">
+              {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+            </span>
+            <span class="font-bold">{entry.data.company}</span>
+            <span class="text-xs shrink-0" style="color: var(--muted); margin-left: auto; text-align: right;">
+              {entry.data.role}
+            </span>
+            <span class="text-xs shrink-0" style="color: var(--muted); width: 1rem; text-align: center; transition: transform 0.2s ease;">
+              +
+            </span>
+          </summary>
+          <div class="px-4 pb-3 text-xs leading-relaxed text-dim max-w-prose" style="padding-left: 2.5rem;">
             <entry.Content />
-          </article>
-        </li>
+          </div>
+        </details>
       ))}
-    </ul>
+    </div>
+
+    <div class="mt-8 border-2 p-3 text-center" style="border-color: var(--border)">
+      <a href="/resume.pdf" target="_blank" class="text-sm font-bold" style="color: var(--fg)">view full CV →</a>
+    </div>
   </div>
 </PageLayout>
+
+<style>
+  details[open] summary span:last-child {
+    transform: rotate(45deg);
+  }
+</style>

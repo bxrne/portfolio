@@ -1,0 +1,97 @@
+---
+import Link from "@components/Link.astro";
+---
+
+<div class="projects-carousel relative border-2 border-black">
+  <div class="overflow-hidden">
+    <div class="embla">
+      <div class="embla__viewport">
+        <div class="embla__container flex">
+          <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
+            <h3 class="font-bold text-sm mb-2">dst</h3>
+            <div class="text-xs text-muted mb-2">
+              <a target="_blank" href="https://github.com/bxrne/dst" class="underline">github</a>
+            </div>
+            <p class="text-xs leading-relaxed">Deterministic chaos engineering for containerised services. Lua scenarios that spawn Docker containers, inject faults controlled by a seed, and verify invariants with property-based testing.</p>
+          </div>
+
+          <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
+            <h3 class="font-bold text-sm mb-2">clank.nvim</h3>
+            <div class="text-xs text-muted mb-2">
+              <a target="_blank" href="https://github.com/bxrne/clank.nvim" class="underline">github</a>
+              <span class="mx-1">/</span>
+              <Link href="/blog/16-agentic-dev">writeup</Link>
+            </div>
+            <p class="text-xs leading-relaxed">Never leave Neovim for AI or GitHub again. Surgical AI fills, steppable code review with quickfix entries, and full pull-request workflows without touching a browser.</p>
+          </div>
+
+          <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
+            <h3 class="font-bold text-sm mb-2">Tau</h3>
+            <div class="text-xs text-muted mb-2">
+              <a target="_blank" href="https://tau.bxrne.com" class="underline">site</a>
+              <span class="mx-1">/</span>
+              <a target="_blank" href="https://github.com/bxrne/tau" class="underline">github</a>
+              <span class="mx-1">/</span>
+              <Link href="/blog/15-tau">writeup</Link>
+            </div>
+            <p class="text-xs leading-relaxed">A bitemporal time-series database where corrections are appended as new layers, not edits. Ships TauQL for defining raw layers, derived series, and materialised views.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between border-t-2 border-black p-2">
+        <button
+          class="embla__prev border-2 border-black px-2 py-1 text-xs hover:bg-black hover:text-white"
+          aria-label="Previous"
+        >
+          &larr;
+        </button>
+        <div class="flex gap-2 items-center">
+          <button class="embla__dot w-2 h-2 border border-black bg-black" data-index="0"></button>
+          <button class="embla__dot w-2 h-2 border border-black" data-index="1"></button>
+          <button class="embla__dot w-2 h-2 border border-black" data-index="2"></button>
+        </div>
+        <button
+          class="embla__next border-2 border-black px-2 py-1 text-xs hover:bg-black hover:text-white"
+          aria-label="Next"
+        >
+          &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import EmblaCarousel from "embla-carousel";
+
+  const node = document.querySelector<HTMLElement>(".embla__viewport");
+  if (node) {
+    const embla = EmblaCarousel(node, { loop: true });
+
+    const prev = document.querySelector<HTMLButtonElement>(".embla__prev")!;
+    const next = document.querySelector<HTMLButtonElement>(".embla__next")!;
+    const dots = document.querySelectorAll<HTMLButtonElement>(".embla__dot");
+
+    prev.addEventListener("click", () => embla.scrollPrev());
+    next.addEventListener("click", () => embla.scrollNext());
+
+    function updateDots() {
+      const idx = embla.selectedScrollSnap();
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("bg-black", i === idx);
+        dot.classList.toggle("bg-white", i !== idx);
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const i = parseInt(dot.dataset.index ?? "0");
+        embla.scrollTo(i);
+      });
+    });
+
+    embla.on("select", updateDots);
+    updateDots();
+  }
+</script>

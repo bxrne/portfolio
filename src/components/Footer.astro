@@ -1,24 +1,9 @@
 ---
-import { SITE, SOCIALS } from "@consts";
-import BackToTop from "@components/BackToTop.astro";
+import { SITE } from "@consts";
 ---
 
-<footer>
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-16">
-    <div class="text-paper-muted">
-      &copy; {new Date().getFullYear()} {SITE.NAME}
-    </div>
-    <div class="flex items-center gap-4">
-      <ul class="flex gap-3 text-sm text-paper-muted md:hidden">
-        {SOCIALS.map((social) => (
-          <li>
-            <a href={social.HREF} target="_blank">
-              {social.NAME}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <BackToTop />
-    </div>
+<footer class="text-center" style="border-top: none;">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-xs text-muted py-6">&copy; {new Date().getFullYear()} {SITE.NAME}</div>
   </div>
 </footer>

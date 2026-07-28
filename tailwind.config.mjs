@@ -1,25 +1,21 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
-  ],
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
-        serif: ["Playfair Display", ...defaultTheme.fontFamily.serif],
-        mono: ["Geist Mono", "JetBrains Mono", ...defaultTheme.fontFamily.mono],
+        sans: ["Geist Mono", "JetBrains Mono", "Fira Code", ...defaultTheme.fontFamily.mono],
+        mono: ["Geist Mono", "JetBrains Mono", "Fira Code", ...defaultTheme.fontFamily.mono],
       },
       colors: {
         paper: {
-          bg: "#faf8f5",
-          fg: "#1a1a1a",
-          muted: "#6b6b6b",
-          border: "#e0dcd7",
-          accent: "#1a1a1a",
-          hover: "#555555",
+          bg: "#ffffff",
+          fg: "#000000",
+          muted: "#555555",
+          border: "#000000",
+          accent: "#000000",
+          hover: "#333333",
         },
       },
     },
