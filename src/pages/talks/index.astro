@@ -3,34 +3,36 @@ import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 
 const talks = (await getCollection("talks"))
-  .filter(talk => !talk.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+	.filter((t) => !t.data.draft)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <PageLayout title="Talks" description="Presentations and talks I've given.">
-  <div class="pt-2 pb-20">
-    <div class="border-2" style="border-color: var(--border);">
-      {talks.map((talk, i) => {
-        const isLast = i === talks.length - 1;
-        const prefix = isLast ? "└──" : "├──";
-        const dateStr = talk.data.date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
-        return (
-          <div class="px-4 py-2 text-sm">
-            <div class="flex items-baseline gap-3">
-              <span class="text-xs shrink-0" style="color: var(--muted); width: 1rem;">{prefix}</span>
-              <span class="font-bold">
-                {talk.data.url
-                  ? <a href={talk.data.url} target="_blank">{talk.data.title}</a>
-                  : talk.data.title
-                }
-              </span>
-              <span class="text-xs shrink-0" style="color: var(--muted); margin-left: auto;">
-                {talk.data.location} · {dateStr}
-              </span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
+	<div class="pt-4">
+		<div class="border-2" style="border-color: var(--border);">
+			<div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+				<span class="flex-1" style="text-align: center;">talks</span>
+			</div>
+			<div class="p-4">
+				<div class="flex flex-col gap-3">
+					{talks.map((talk) => (
+						<div>
+							<div class="flex items-start gap-3">
+								<div class="flex-1 min-w-0">
+									{talk.data.url ? (
+										<a href={talk.data.url} target="_blank" class="block">
+											<span class="text-sm font-bold">{talk.data.title}</span>
+										</a>
+									) : (
+										<span class="text-sm font-bold">{talk.data.title}</span>
+									)}
+									<div class="text-xs mt-0.5" style="color: var(--muted);">{talk.data.location} · {talk.data.date.toLocaleDateString("en-US", { month: "short", year: "numeric" })}</div>
+								</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	</div>
 </PageLayout>

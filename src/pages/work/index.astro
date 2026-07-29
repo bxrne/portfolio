@@ -15,37 +15,60 @@ const work = await Promise.all(
 ---
 
 <PageLayout title="Work" description="Professional experience and education.">
-  <div class="pt-2 pb-20">
-    <div class="border-2" style="border-color: var(--border);">
-      {work.map((entry) => (
-        <details class="group">
-          <summary class="flex items-baseline gap-3 px-4 py-2 text-sm cursor-pointer list-none select-none">
-            <span class="text-xs shrink-0" style="color: var(--muted); width: 6rem;">
-              {dateRange(entry.data.dateStart, entry.data.dateEnd)}
-            </span>
-            <span class="font-bold">{entry.data.company}</span>
-            <span class="text-xs shrink-0" style="color: var(--muted); margin-left: auto; text-align: right;">
+<div class="pt-4 ">
+	    <div class="border-2 relative work-list" style="border-color: var(--border);">
+	      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+	        <span class="flex-1" style="text-align: center;">work</span>
+	      </div>
+	      {work.map((entry) => (
+        <div>
+          <button class="work-toggle flex items-center gap-4 px-4 py-3 w-full text-left cursor-pointer hover:bg-[var(--card-bg)] transition-colors">
+            <span class="text-sm shrink-0" style="color: var(--muted);">
               {entry.data.role}
             </span>
-            <span class="text-xs shrink-0" style="color: var(--muted); width: 1rem; text-align: center; transition: transform 0.2s ease;">
-              +
+            <span class="flex-1"></span>
+            <span class="font-bold text-sm shrink-0">
+              {entry.data.company}
             </span>
-          </summary>
-          <div class="px-4 pb-3 text-xs leading-relaxed text-dim max-w-prose" style="padding-left: 2.5rem;">
+            <span class="text-sm shrink-0 whitespace-nowrap" style="color: var(--muted);">
+              {dateRange(entry.data.dateStart, entry.data.dateEnd)}
+            </span>
+            <svg class="chevron shrink-0 transition-transform duration-200" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="work-content hidden px-4 pb-4 text-sm leading-relaxed">
             <entry.Content />
           </div>
-        </details>
+        </div>
       ))}
     </div>
 
     <div class="mt-8 border-2 p-3 text-center" style="border-color: var(--border)">
-      <a href="/resume.pdf" target="_blank" class="text-sm font-bold" style="color: var(--fg)">view full CV →</a>
+      <a href="/resume.pdf" target="_blank" class="text-sm font-bold hover:underline" style="color: var(--fg)">view full CV →</a>
     </div>
   </div>
 </PageLayout>
 
-<style>
-  details[open] summary span:last-child {
-    transform: rotate(45deg);
+<script>
+  const container = document.querySelector(".work-list");
+  if (container) {
+    container.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest(".work-toggle");
+      if (!btn) return;
+      const item = btn.parentElement;
+      if (!item) return;
+      const content = item.querySelector(".work-content") as HTMLElement;
+      const chevron = btn.querySelector(".chevron") as HTMLElement;
+      if (!content || !chevron) return;
+      const isOpen = !content.classList.contains("hidden");
+      if (isOpen) {
+        content.classList.add("hidden");
+        chevron.style.transform = "";
+      } else {
+        content.classList.remove("hidden");
+        chevron.style.transform = "rotate(180deg)";
+      }
+    });
   }
-</style>
+</script>

@@ -4,51 +4,115 @@ import PageLayout from "@layouts/PageLayout.astro";
 import { readingTime } from "@lib/utils";
 
 const data = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+	.filter(post => !post.data.draft)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 type Acc = {
-  [year: string]: CollectionEntry<"blog">[];
+	[year: string]: CollectionEntry<"blog">[];
 }
 
 const posts = data.reduce((acc: Acc, post) => {
-    const year = post.data.date.getFullYear().toString();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {});
+	const year = post.data.date.getFullYear().toString();
+	if (!acc[year]) {
+		acc[year] = [];
+	}
+	acc[year].push(post);
+	return acc;
+}, {});
 
 const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
 ---
 
+<style>
+	.year-group {
+		position: relative;
+	}
+	.year-posts {
+		position: relative;
+		padding-left: 1rem;
+	}
+	.year-posts::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 1px;
+		background-color: var(--border);
+	}
+	.group-post {
+		position: relative;
+		padding-left: 1rem;
+	}
+	.year-toggle {
+		cursor: pointer;
+	}
+	.year-toggle:hover {
+		color: var(--accent);
+	}
+	.post-link:hover {
+		color: var(--accent);
+	}
+	.year-posts.hidden {
+		display: none;
+	}
+</style>
+
 <PageLayout title="Writing" description="Thoughts, guides, and notes.">
-  <div class="mx-auto px-4 pt-2 pb-20" style="max-width: 68rem;">
-    <div class="border-2 p-4" style="border-color: var(--border);">
-      {years.map((year, yi) => {
-        const isLastYear = yi === years.length - 1;
-        const yearPrefix = isLastYear ? "└──" : "├──";
-        return (
-          <div class="text-sm leading-relaxed" style="color: var(--fg)">
-            <span style="color: var(--muted)">{yearPrefix} {year}/</span>
-            <div class="ml-6">
-              {posts[year].map((post, pi) => {
-                const isLastPost = pi === posts[year].length - 1;
-                const postPrefix = isLastPost ? "└──" : "├──";
-                return (
-                  <div class="flex items-baseline gap-3">
-                    <a href={`/blog/${post.slug}`}>
-                      <span style="color: var(--muted)">{postPrefix}</span> {post.data.title}
-                    </a>
-                    <span class="text-xs shrink-0" style="color: var(--muted)">{readingTime(post.body)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
+	<div class="pt-4 " >
+		<div class="border-2" style="border-color: var(--border);">
+			<div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+				<span class="flex-1" style="text-align: center;">writing</span>
+			</div>
+			<div class="p-4">
+				<div class="flex flex-col gap-4" id="writing-tree">
+				{years.map((year, yi) => {
+					const postCount = posts[year].length;
+					return (
+						<div class="year-group">
+							<button class="year-toggle flex items-baseline gap-3 w-full text-left" id={`year-toggle-${yi}`}>
+								<span class="text-sm font-bold" style="color: var(--fg);">{year}/</span>
+								<span class="text-sm" style="color: var(--muted);">{postCount} posts</span>
+							</button>
+							<div class="year-posts ml-2 mt-1">
+								{posts[year].map((post) => {
+									return (
+									<div class="flex flex-col">
+										<div class="group-post flex items-baseline gap-3 py-1">
+											<a href={`/blog/${post.slug}`} class="post-link text-sm font-bold">{post.data.title}</a>
+											<span class="text-xs shrink-0" style="color: var(--muted);">{readingTime(post.body)}</span>
+										</div>
+										<div class="ml-4 pb-1">
+
+											<p class="text-xs" style="color: var(--muted);">{post.data.description}</p>
+										</div>
+											</div>
+									);
+								})}
+							</div>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	</div>
 </PageLayout>
+
+<script>
+	function toggleYear(btn: HTMLButtonElement) {
+		const group = btn.parentElement;
+		if (!group) return;
+		const posts = group.querySelector(".year-posts") as HTMLElement;
+		if (!posts) return;
+		const isHidden = posts.classList.contains("hidden");
+		if (isHidden) {
+			posts.classList.remove("hidden");
+		} else {
+			posts.classList.add("hidden");
+		}
+	}
+
+	document.querySelectorAll(".year-toggle").forEach((btn) => {
+		btn.addEventListener("click", () => toggleYear(btn as HTMLButtonElement));
+	});
+</script>

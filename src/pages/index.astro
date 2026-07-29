@@ -12,50 +12,52 @@ const recentPosts = (await getCollection("blog"))
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
-  <div class="pt-4">
+<div class="pt-4">
+	    <div class="border-2" style="border-color: var(--border);">
+	      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+	        <span class="flex-1" style="text-align: center;">about</span>
+	      </div>
+	    <div class="p-4">
+  <img
+    src="/headshot.jpg"
+    alt="Adam Byrne"
+    class="float-left w-16 h-16 object-cover grayscale border-2 mr-3 mb-1"
+    style="border-color: var(--border);"
+  />
 
-    <div class="border-2 p-4 mb-8" style="border-color: var(--border);">
-      <div class="flex items-start gap-4">
-        <img
-          src="/headshot.jpg"
-          alt="Adam Byrne"
-          class="w-16 h-16 object-cover grayscale border-2 shrink-0"
-          style="border-color: var(--border);"
-        />
-        <div>
-          <p class="text-sm leading-relaxed">
-            Hi, I'm Adam. I write systems software: databases, kernels, simulators.
-          </p>
-          <p class="text-sm leading-relaxed mt-2">
-            I studied through ISE (MSc), a residency-based programme where half the
-            degree is spent in industry. My placements covered factory automation
-            and teleoperation, ADAS radar ML, and AI investment research.
-          </p>
-          <p class="text-sm leading-relaxed mt-2">
-            Alongside that I worked on simulation and payload software for
-            high-powered competition rockets.
-          </p>
-        </div>
+  <p class="text-sm leading-relaxed">
+I'm Adam. I studied through ISE (MSc), a programme built around graded industry residencies, so half the degree was spent shipping real code rather than studying it.
+
+Outside of work I work on: dstest (deterministic simulation testing for Docker workloads, Lua-scripted) and tau (bitemporal database built around the idea that corrections are appends not edits, over multi-dim layers). I'm interested in deterministic simulation testing, correctness, and performance. I also contribute to Kubernetes upstream.
+  </p>
+
+  <div class="clear-both"></div>
+</div>
+	    </div>
+
+    <div class="border-2 mt-5" style="border-color: var(--border);">
+      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+        <span class="flex-1" style="text-align: center;">projects</span>
       </div>
+      <ProjectsCarousel />
     </div>
 
-    <h2 class="font-bold text-base mb-4">Pinned Projects</h2>
-    <ProjectsCarousel />
-
-    <h2 class="font-bold text-base mt-8 mb-4">Recent Writing</h2>
-    <div class="border-2" style="border-color: var(--border);">
+    <div class="border-2 mt-5" style="border-color: var(--border);">
+      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+        <span class="flex-1" style="text-align: center;">recent writing</span>
+      </div>
       {recentPosts.map((post, index) => (
         <a
           href={`/blog/${post.slug}`}
           class="flex items-start gap-3 p-3 hover:bg-black/5 transition-colors group"
-          style={index < recentPosts.length - 1 ? "border-bottom: 2px solid var(--border);" : ""}
+          style={`${index < recentPosts.length - 1 ? "border-bottom: 2px solid var(--border);" : ""}${index % 2 !== 0 ? " background-color: var(--card-bg);" : ""}`}
         >
-          <div class="shrink-0 w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-xs font-mono" style="color: var(--muted);">
+          <div class="shrink-0 w-8 h-8 flex items-center justify-center text-xs font-mono" style="background-color: var(--card-bg); color: var(--muted);">
             {String(index + 1).padStart(2, "0")}
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-2">
-              <span class="text-sm font-medium group-hover:underline">{post.data.title}</span>
+              <span class="text-sm font-medium hover:underline">{post.data.title}</span>
               <span class="text-xs shrink-0" style="color: var(--muted);">{readingTime(post.body)}</span>
             </div>
             <p class="text-xs mt-1 line-clamp-1" style="color: var(--muted);">{post.data.description}</p>
@@ -64,13 +66,16 @@ const recentPosts = (await getCollection("blog"))
       ))}
     </div>
 
-    <h2 class="font-bold text-base mt-8 mb-4">Elsewhere</h2>
-    <div class="border-2 p-3 text-sm flex flex-wrap gap-x-4 gap-y-1" style="border-color: var(--border);">
-      <a href="https://github.com/bxrne" target="_blank">GitHub</a>
-      <a href="https://www.linkedin.com/in/bxrne" target="_blank">LinkedIn</a>
-      <a href="https://twitter.com/abxrne" target="_blank">Twitter</a>
-      <a href="https://substack.com/@bxrne" target="_blank">Substack</a>
-      <a href="/resume.pdf" target="_blank">CV</a>
+    <div class="border-2 mt-5" style="border-color: var(--border);">
+      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg); text-align: center;">
+        <span class="flex-1" style="text-align: center;">elsewhere</span>
+      </div>
+      <div class="p-3 text-sm flex flex-wrap gap-x-4 gap-y-1" style="border-color: var(--border);">
+        <a href="https://github.com/bxrne" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/bxrne" target="_blank">LinkedIn</a>
+        <a href="https://twitter.com/abxrne" target="_blank">Twitter</a>
+        <a href="/resume.pdf" target="_blank">CV</a>
+      </div>
     </div>
 
   </div>

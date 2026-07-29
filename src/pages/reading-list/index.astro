@@ -10,13 +10,13 @@ const readings = (await getCollection("reading"))
 <PageLayout title="Reading" description="Books and papers I've read and recommend.">
   <div class="pt-4 pb-20">
     <div class="border-2" style="border-color: var(--border);">
-      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="color: var(--muted);">
-        <span style="width: 6rem;">date</span>
-        <span>title</span>
-        <span style="margin-left: auto;">author</span>
+      <div class="flex items-baseline gap-3 px-4 py-2 text-xs font-bold" style="background-color: var(--accent); color: var(--bg); text-align: center;">
+        <span class="flex-1" style="text-align: center;">date</span>
+        <span class="flex-1" style="text-align: center;">title</span>
+        <span class="flex-1" style="text-align: center;">author</span>
       </div>
-      {readings.map((entry) => (
-        <div class="flex items-baseline gap-3 px-4 py-2 text-sm">
+      {readings.map((entry, i) => (
+        <div class="flex items-baseline gap-3 px-4 py-2 text-sm" style={i % 2 === 0 ? 'background-color: var(--card-bg);' : ''}>
           <span class="text-xs shrink-0" style="color: var(--muted); width: 6rem;">
             {entry.data.date.toLocaleDateString("en-US", { month: "short", year: "numeric" })}
           </span>

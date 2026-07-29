@@ -254,6 +254,7 @@ select.theme-select {
   background: var(--bg);
   color: var(--fg);
   font-family: inherit;
+  border-radius: 0;
 }
 
 .theme-btn:hover {
@@ -262,8 +263,8 @@ select.theme-select {
 }
 
 select.theme-select:hover {
-  background-color: var(--hover-bg);
-  color: var(--hover-fg);
+  background-color: var(--card-bg);
+  color: var(--fg);
 }
 
 select.theme-select:hover option {
