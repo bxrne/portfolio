@@ -215,10 +215,35 @@ article {
 a {
   color: var(--link);
   text-decoration: none;
+  font-weight: normal;
 }
 
 a:hover {
-  text-decoration: underline;
+  color:black;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Bracket-style links instead of underlines */
+a:not(.no-bracket):not(.nav-link):not(.block)::before {
+  content: "[";
+}
+
+a:not(.no-bracket):not(.nav-link):not(.block)::after {
+  content: "]";
+}
+
+.prose a {
+  text-decoration: none;
+  font-weight: inherit;
+}
+
+.prose a:hover {
+  color:black;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 hr {
@@ -271,3 +296,40 @@ select.theme-select:hover option {
   background: var(--bg);
   color: var(--fg);
 }
+
+/* inline code: same look whether it comes from markdown or plaintext in astro */
+code {
+	  font-family: "Geist Mono", "JetBrains Mono", "Fira Code", "Menlo", monospace;
+    font-size: 0.875rem;
+    background-color: var(--card-bg);
+    color: var(--fg);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.prose code {
+  background-color: var(--card-bg);
+  color: var(--fg);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: inherit;
+  font-size: 0.875em;
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  white-space: pre;
+  word-break: normal;
+}
+

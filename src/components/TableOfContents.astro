@@ -24,8 +24,8 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         const p = isLast ? lastPrefix : prefix;
         return (
           <div>
-            <a href={`#${h.slug}`} style="color: var(--muted)" class="hover:underline">
-              {p} {h.text}
+            <a href={`#${h.slug}`} style="color: var(--muted)" class="no-bracket">
+              {p} [{h.text}]
             </a>
           </div>
         );

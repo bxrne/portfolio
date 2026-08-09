@@ -1,0 +1,18 @@
+---
+type Props = {
+  repo?: string;
+  demo?: string;
+}
+
+const { repo, demo } = Astro.props;
+
+const repoHref = repo && repo !== "#" && repo !== "" ? repo : undefined;
+const demoHref = demo && demo !== "#" && demo !== "" ? demo : undefined;
+---
+
+{repoHref && (
+  <a href={repoHref} target="_blank" rel="noreferrer">repo</a>
+)}
+{demoHref && (
+  <a href={demoHref} target="_blank" rel="noreferrer">demo</a>
+)}

@@ -9,9 +9,8 @@ import Link from "@components/Link.astro";
         <div class="embla__container flex">
           <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
             <h3 class="font-bold text-sm mb-2">dstest</h3>
-            <div class="text-xs text-muted mb-2">
-              <a target="_blank" href="https://github.com/bxrne/dstest" class="underline">github</a>
-              <span class="mx-1">/</span>
+            <div class="text-xs text-muted mb-2 flex flex-wrap gap-x-3 gap-y-1">
+              <a target="_blank" rel="noreferrer" href="https://github.com/bxrne/dstest">github</a>
               <Link href="/blog/17-dstest">writeup</Link>
             </div>
             <p class="text-xs leading-relaxed">Deterministic simulation testing for containerized workloads. Same seed produces the same fault sequence forever: network partitions, disk throttling, OOM kills, process pauses. Lua scenarios verify invariants under injected chaos. Inspired by FoundationDB's simulator and TigerBeetle's VOPR.</p>
@@ -19,9 +18,8 @@ import Link from "@components/Link.astro";
 
           <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
             <h3 class="font-bold text-sm mb-2">clank.nvim</h3>
-            <div class="text-xs text-muted mb-2">
-              <a target="_blank" href="https://github.com/bxrne/clank.nvim" class="underline">github</a>
-              <span class="mx-1">/</span>
+            <div class="text-xs text-muted mb-2 flex flex-wrap gap-x-3 gap-y-1">
+              <a target="_blank" rel="noreferrer" href="https://github.com/bxrne/clank.nvim">github</a>
               <Link href="/blog/16-agentic-dev">writeup</Link>
             </div>
             <p class="text-xs leading-relaxed">An LLM agent that writes into your editor instead of a chat bubble. Quickfix entries for review findings, inline fills for targeted edits, full GitHub PR checkout and review without touching a browser. The model drives your existing navigation primitives.</p>
@@ -29,11 +27,9 @@ import Link from "@components/Link.astro";
 
           <div class="embla__slide min-w-0 shrink-0 grow-0 basis-full p-4">
             <h3 class="font-bold text-sm mb-2">Tau</h3>
-            <div class="text-xs text-muted mb-2">
-              <a target="_blank" href="https://tau.bxrne.com" class="underline">site</a>
-              <span class="mx-1">/</span>
-              <a target="_blank" href="https://github.com/bxrne/tau" class="underline">github</a>
-              <span class="mx-1">/</span>
+            <div class="text-xs text-muted mb-2 flex flex-wrap gap-x-3 gap-y-1">
+              <a target="_blank" rel="noreferrer" href="https://tau.bxrne.com">site</a>
+              <a target="_blank" rel="noreferrer" href="https://github.com/bxrne/tau">github</a>
               <Link href="/blog/15-tau">writeup</Link>
             </div>
             <p class="text-xs leading-relaxed">A bitemporal TSDB where corrections are appended as layers, not edits. Each layer is an immutable, ordered batch; newest wins at query time. Ships TauQL for point lookups, range scans, derived lenses, and materialised views. Tested against a reference oracle under fault injection.</p>

@@ -20,8 +20,8 @@ const talks = (await getCollection("talks"))
 							<div class="flex items-start gap-3">
 								<div class="flex-1 min-w-0">
 									{talk.data.url ? (
-										<a href={talk.data.url} target="_blank" class="block">
-											<span class="text-sm font-bold">{talk.data.title}</span>
+										<a href={talk.data.url} target="_blank" rel="noreferrer" class="no-bracket block">
+											<span class="text-sm font-bold">[{talk.data.title}]</span>
 										</a>
 									) : (
 										<span class="text-sm font-bold">{talk.data.title}</span>

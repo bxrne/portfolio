@@ -11,7 +11,6 @@ Personal portfolio website showcasing work placements, blog posts, and reading l
 - **Styling**: Tailwind CSS 3.x with custom theme
 - **Package Manager**: pnpm 10.x
 - **Build Tool**: Astro CLI
-- **Analytics**: Vercel Analytics + Speed Insights
 - **Node Version**: ES2024
 
 ## Language & Framework Conventions
@@ -102,7 +101,7 @@ Personal portfolio website showcasing work placements, blog posts, and reading l
 
 ### Site Config
 - **Site URL**: `https://bxrne.com` (in `astro.config.mjs`)
-- **Integrations**: MDX, Sitemap, Tailwind, Vercel Analytics
+- **Integrations**: MDX, Sitemap, Tailwind
 - **Output**: Static HTML in `dist/` directory
 
 ## Directory Layout

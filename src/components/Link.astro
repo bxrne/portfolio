@@ -11,7 +11,6 @@ const { href, external, ...rest } = Astro.props;
   href={href}
   target={external ? "_blank" : "_self"}
   style="color: var(--link)"
-  class="underline underline-offset-2 decoration-from-font"
   {...rest}
 >
   <slot/>

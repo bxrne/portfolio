@@ -22,7 +22,7 @@ const readings = (await getCollection("reading"))
           </span>
           <span class="font-bold">
             {entry.data.url
-              ? <a href={entry.data.url} target="_blank">{entry.data.title}</a>
+              ? <a href={entry.data.url} target="_blank" rel="noreferrer">{entry.data.title}</a>
               : entry.data.title
             }
           </span>
