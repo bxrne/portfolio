@@ -32,6 +32,9 @@ const { Content, headings } = await post.render();
       <h1 class="font-bold text-lg mt-2" style="color: var(--fg)">
         {post.data.title}
       </h1>
+      <div class="mt-2 text-sm" style="color: var(--muted)">
+	      {post.data.repo == "#" || post.data.repo == "" ? "" : <a href={post.data.repo} target="_blank">repo</a>}
+
     </div>
     <TableOfContents headings={headings} />
     <article>

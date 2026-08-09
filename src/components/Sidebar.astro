@@ -4,16 +4,20 @@ import { SOCIALS } from "@consts";
 const pathname = Astro.url.pathname;
 
 const links = [
-  { href: "/", label: "Home" },
-  { href: "/blog", label: "Writing" },
-  { href: "/work", label: "Work" },
-  { href: "/reading-list", label: "Reading" },
-  { href: "/talks", label: "Talks" },
+  { href: "/", label: "home" },
+  { href: "/blog", label: "writing" },
+  { href: "/work", label: "work" },
+  { href: "/reading-list", label: "reading" },
+  { href: "/talks", label: "talks" },
 ];
 
 function isActive(href: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
+}
+
+function displayLabel(href: string, label: string) {
+  return isActive(href) ? `[${label}]` : label;
 }
 ---
 
@@ -38,7 +42,7 @@ function isActive(href: string) {
           ]}
           style="color: var(--fg);"
         >
-          {label}
+          {displayLabel(href, label)}
         </a>
       ))}
     </nav>
@@ -58,7 +62,7 @@ function isActive(href: string) {
         class="block px-3 py-2 text-sm"
         style={`border: 2px solid ${isActive(href) ? "var(--border)" : "transparent"}; background-color: ${isActive(href) ? "var(--accent)" : "transparent"}; color: ${isActive(href) ? "var(--bg)" : "var(--fg)"}`}
       >
-        {label}
+        {displayLabel(href, label)}
       </a>
     ))}
   </nav>
