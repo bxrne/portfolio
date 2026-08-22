@@ -1,0 +1,79 @@
+---
+import { SITE, SOCIALS } from "@consts";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const siteUrl = new URL(Astro.site!).href;
+
+const sameAs = SOCIALS.map((social) => social.HREF);
+
+const graph = [
+  {
+    "@type": "WebSite",
+    "@id": `${siteUrl}#website`,
+    url: siteUrl,
+    name: SITE.NAME,
+    description: description,
+    publisher: { "@id": `${siteUrl}#person` },
+    inLanguage: "en",
+  },
+  {
+    "@type": "Person",
+    "@id": `${siteUrl}#person`,
+    name: "Adam Byrne",
+    alternateName: SITE.NAME,
+    url: siteUrl,
+    description: description,
+    email: `mailto:${SITE.EMAIL}`,
+    image: new URL("/headshot.jpg", Astro.site).href,
+    jobTitle: "Software Engineer",
+    knowsAbout: [
+      "deterministic simulation testing",
+      "databases",
+      "distributed systems",
+      "systems programming",
+      "Kubernetes",
+    ],
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IE",
+    },
+    sameAs,
+  },
+  {
+    "@type": "Organization",
+    "@id": `${siteUrl}#organization`,
+    name: SITE.NAME,
+    alternateName: "Adam Byrne",
+    url: siteUrl,
+    description: `Personal software engineering portfolio and writing by Adam Byrne. ${description}`,
+    email: SITE.EMAIL,
+    logo: new URL("/headshot.jpg", Astro.site).href,
+    founder: { "@id": `${siteUrl}#person` },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        email: SITE.EMAIL,
+        contactType: "general",
+        availableLanguage: ["English"],
+      },
+    ],
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IE",
+    },
+    sameAs,
+  },
+];
+---
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": graph })}
+/>

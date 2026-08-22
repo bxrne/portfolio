@@ -1,0 +1,23 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { ABOUT } from "@consts";
+---
+
+<PageLayout title={ABOUT.TITLE} description={ABOUT.DESCRIPTION}>
+<div class="pt-4">
+  <div class="border-2" style="border-color: var(--border);">
+    <div class="px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg);">about</div>
+    <div class="p-4 space-y-4 text-sm leading-relaxed max-w-prose">
+      <p>
+I am Adam Byrne, a software engineer working on deterministic simulation testing, correctness, and low-level performance. This site is my portfolio: it collects the placements I have worked, the things I have written, talks I have given, and a reading list of books and papers I recommend.
+      </p>
+      <p>
+I studied through ISE (MSc), a programme built around graded industry residencies, so half the degree was spent shipping real code rather than studying it. That path took me through regulated medical device software, industrial inspection, and desktop application work before I specialised in infrastructure.
+      </p>
+      <p>
+Outside of employment I maintain dstest, deterministic simulation testing for Docker workloads scripted in Lua, and tau, a bitemporal database built around the idea that corrections are appends not edits over multi-dimensional layers. I also contribute to Kubernetes upstream.
+      </p>
+    </div>
+  </div>
+</div>
+</PageLayout>

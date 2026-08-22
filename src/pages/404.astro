@@ -1,0 +1,40 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import { SITE } from "@consts";
+
+const links = [
+  { href: "/", label: "home" },
+  { href: "/blog", label: "writing" },
+  { href: "/work", label: "work" },
+  { href: "/reading-list", label: "reading" },
+  { href: "/talks", label: "talks" },
+  { href: "/about", label: "about" },
+  { href: "/contact", label: "contact" },
+  { href: "/llms.txt", label: "llms.txt" },
+];
+---
+
+<PageLayout title="not found" description={`The requested page does not exist on ${SITE.NAME}.`}>
+<div class="pt-4">
+  <div class="border-2" style="border-color: var(--border);">
+    <div class="px-4 py-2 text-xs font-bold" style="background-color: var(--fg); color: var(--bg);">404</div>
+    <div class="p-4 space-y-4 text-sm leading-relaxed max-w-prose">
+      <h1 class="font-bold">not found</h1>
+      <p>
+The path you requested does not exist on this site. This response is a real HTTP 404; there is no page at this address.
+      </p>
+      <p>Where to look next:</p>
+      <ul class="list-disc pl-5 space-y-1">
+        {links.map(({ href, label }) => (
+          <li><a href={href} class="no-bracket">{href === "/" ? "/" : `/${label}`}</a></li>
+        ))}
+        <li><a href="/sitemap-index.xml">/sitemap-index.xml</a>, the full list of pages</li>
+        <li><a href="/rss.xml">/rss.xml</a>, the blog feed</li>
+      </ul>
+      <p>
+Agents: fetch <a href="/llms.txt">/llms.txt</a> for a machine readable site map with descriptions. Every page also has a Markdown mirror at the same path with a <code>.md</code> suffix.
+      </p>
+    </div>
+  </div>
+</div>
+</PageLayout>

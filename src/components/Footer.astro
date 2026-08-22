@@ -4,6 +4,11 @@ import { SITE } from "@consts";
 
 <footer class="text-center" style="border-top: none;">
   <div class="max-w-5xl mx-auto px-4">
-    <div class="text-xs text-muted py-6">&copy; {new Date().getFullYear()} {SITE.NAME}</div>
+    <div class="text-xs text-muted py-6 flex flex-wrap justify-center gap-x-3 gap-y-1">
+      <a href="/about">about</a>
+      <a href="/contact">contact</a>
+      <a href="/privacy">privacy</a>
+      <span>&copy; {new Date().getFullYear()} {SITE.NAME}</span>
+    </div>
   </div>
 </footer>

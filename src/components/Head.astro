@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import "@fontsource/geist-mono/latin-400.css";
 import geistMono400 from "@fontsource/geist-mono/files/geist-mono-latin-400-normal.woff2";
+import StructuredData from "@components/StructuredData.astro";
 
 interface Props {
   title: string;
@@ -26,6 +27,13 @@ const { title, description, image = "/nano.png" } = Astro.props;
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- JSON-LD structured data -->
+<StructuredData title={title} description={description} />
+
+<!-- Machine readable agent entry points -->
+<link rel="alternate" type="text/plain" href={new URL("/llms.txt", Astro.site)} />
+<link rel="alternate" type="application/rss+xml" title="RSS" href={new URL("/rss.xml", Astro.site)} />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
