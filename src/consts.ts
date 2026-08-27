@@ -39,15 +39,7 @@ export const ABOUT: Metadata = {
 		"Adam Byrne is a software engineer focused on deterministic simulation testing, correctness, and low-level performance.",
 };
 
-export const CONTACT: Metadata = {
-	TITLE: "contact",
-	DESCRIPTION: "How to reach Adam Byrne: email and social profiles.",
-};
 
-export const PRIVACY: Metadata = {
-	TITLE: "privacy",
-	DESCRIPTION: "Privacy policy for bxrne.com.",
-};
 
 export const SOCIALS: Socials = [
 	{
